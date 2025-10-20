@@ -175,7 +175,8 @@ function ShaderPlane() {
 
   return (
     <mesh ref={meshRef} position={[0, -0.75, -0.5]}>
-      <planeGeometry args={[4, 4]} />
+      {/* Changed the size from [4, 4] to [8, 8] to cover the full screen */}
+      <planeGeometry args={[8, 8]} />
       <cPPNShaderMaterial ref={materialRef} side={THREE.DoubleSide} />
     </mesh>
   );
