@@ -1,14 +1,15 @@
-import Hero from '@/components/neural-network-hero'; // Import the Hero component
-import { Header1 } from "@/components/ui/header"; // Import the Header1 component
-import { Pricing } from '@/components/pricing'; // Import the Pricing component
-import { Features } from '@/components/features-5'; // Import the new Features component
+import Hero from '@/components/neural-network-hero';
+import { Header1 } from "@/components/ui/header";
+import { Pricing } from '@/components/pricing';
+import { Features } from '@/components/features-5';
+import { LiveStats } from '@/components/live-stats'; 
 
 // Define your pricing plans data
 const pricingPlans = [
   {
     name: "Starter",
     price: "19",
-    yearlyPrice: "180", // Approx 20% saving from 19*12 = 228
+    yearlyPrice: "180",
     period: "month",
     features: [
       "Access to core features",
@@ -24,7 +25,7 @@ const pricingPlans = [
   {
     name: "Pro",
     price: "49",
-    yearlyPrice: "470", // Approx 20% saving from 49*12 = 588
+    yearlyPrice: "470",
     period: "month",
     features: [
       "All Starter features",
@@ -36,13 +37,13 @@ const pricingPlans = [
     description: "Perfect for professionals and small teams.",
     buttonText: "Choose Pro",
     href: "/signup/pro",
-    isPopular: true, // Highlight this plan
+    isPopular: true,
   },
   {
     name: "Enterprise",
-    price: "99", // Or "Contact Us"
-    yearlyPrice: "950", // Approx 20% saving from 99*12 = 1188
-    period: "month", // Or custom
+    price: "99",
+    yearlyPrice: "950",
+    period: "month",
     features: [
       "All Pro features",
       "Team collaboration tools",
@@ -57,21 +58,17 @@ const pricingPlans = [
   },
 ];
 
-
 export default function Home() {
   return (
     <>
-      <Header1 /> {/* Render the Header1 component */}
-      {/* Render the Hero component */}
+      <Header1 />
       <Hero
         title="CodeXly"
         description="Leveraging AI to generate, explain, and optimize code across languages and frameworks."
       />
-      {/* Render the Pricing component */}
       <Pricing plans={pricingPlans} />
-
-      {/* Render the Features component below the Pricing section */}
       <Features />
+      <LiveStats />
     </>
   );
 }
