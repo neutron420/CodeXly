@@ -7,7 +7,8 @@ import { Slider } from "@/components/ui/slider"
 import { useState } from "react"
 import { Play, Pause, Timer, RotateCw } from "lucide-react"
 
-export function UseIntervalDemo() {
+// Renamed function from UseIntervalDemo to LiveStats
+export function LiveStats() {
   const [count, setCount] = useState<number>(0)
   const [delay, setDelay] = useState<number>(1000)
   const [isPlaying, setPlaying] = useState<boolean>(false)
@@ -20,6 +21,7 @@ export function UseIntervalDemo() {
   )
 
   return (
+    // Rest of the component code remains the same...
     <div className="grid grid-cols-2 gap-6 max-w-4xl mx-auto">
       {/* Left Column - Interactive Demo */}
       <Card className="p-6">
@@ -144,5 +146,4 @@ useInterval(
       </Card>
     </div>
   )
-  
 }
