@@ -1,0 +1,141 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum LanguageName {
+  C
+  CPP
+  JAVA
+  JAVASCRIPT
+  TYPESCRIPT
+  PYTHON
+  RUST
+  GO
+}
+
+enum Difficulty {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts Account[]
+  sessions Session[]
+  results  Result[]
+
+  languageStats UserLanguageStats[]
+}
+
+model Language {
+  id       String       @id @default(cuid())
+  name     LanguageName @unique
+  snippets Snippet[]
+}
+
+model Topic {
+  id       String    @id @default(cuid())
+  name     String    @unique
+  snippets Snippet[]
+}
+
+model Snippet {
+  id         String     @id @default(cuid())
+  content    String     @db.Text
+  languageId String
+  topicId    String
+  difficulty Difficulty @default(BEGINNER)
+  createdAt  DateTime   @default(now())
+
+  language Language @relation(fields: [languageId], references: [id], onDelete: Cascade)
+  topic    Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  results  Result[]
+
+  @@index([languageId])
+  @@index([topicId])
+  @@index([difficulty])
+}
+
+model Result {
+  id        String   @id @default(cuid())
+  userId    String
+  snippetId String
+  wpm       Float
+  accuracy  Float
+  duration  Float?
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  snippet Snippet @relation(fields: [snippetId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([snippetId])
+  @@index([createdAt])
+}
+
+model UserLanguageStats {
+  id                String       @id @default(cuid())
+  userId            String
+  languageName      LanguageName // e.g., PYTHON
+  averageWpm        Float        @default(0)
+  averageAccuracy   Float        @default(0)
+  snippetsCompleted Int          @default(0)
+  bestWpm           Float        @default(0)
+  updatedAt         DateTime     @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, languageName]) 
+  @@index([userId])
+}
