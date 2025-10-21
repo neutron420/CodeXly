@@ -3,8 +3,10 @@ import { Header1 } from "@/components/ui/header";
 import { Pricing } from '@/components/pricing';
 import { Features } from '@/components/features-5';
 import { LiveStats } from '@/components/live-stats'; 
+import { StaggerTestimonials } from "@/components/stagger-testimonials";
+import { StackedCircularFooter } from "@/components/ui/stacked-circular-footer";
+import { FaqsSection } from "@/components/faqs-1";
 
-// Define your pricing plans data
 const pricingPlans = [
   {
     name: "Starter",
@@ -58,6 +60,9 @@ const pricingPlans = [
   },
 ];
 
+
+
+
 export default function Home() {
   return (
     <>
@@ -69,6 +74,10 @@ export default function Home() {
       <Pricing plans={pricingPlans} />
       <Features />
       <LiveStats />
+      <StaggerTestimonials />
+      <FaqsSection />
+      <StackedCircularFooter />
+
     </>
   );
 }
