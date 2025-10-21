@@ -1,6 +1,7 @@
 import Hero from '@/components/neural-network-hero'; // Import the Hero component
 import { Header1 } from "@/components/ui/header"; // Import the Header1 component
 import { Pricing } from '@/components/pricing'; // Import the Pricing component
+import { Features } from '@/components/features-5'; // Import the new Features component
 
 // Define your pricing plans data
 const pricingPlans = [
@@ -66,8 +67,11 @@ export default function Home() {
         title="CodeXly"
         description="Leveraging AI to generate, explain, and optimize code across languages and frameworks."
       />
-      {/* Render the Pricing component below the Hero section */}
+      {/* Render the Pricing component */}
       <Pricing plans={pricingPlans} />
+
+      {/* Render the Features component below the Pricing section */}
+      <Features />
     </>
   );
 }
