@@ -128,7 +128,7 @@ model Result {
 model UserLanguageStats {
   id                String       @id @default(cuid())
   userId            String
-  languageName      LanguageName // e.g., PYTHON
+  languageName      LanguageName 
   averageWpm        Float        @default(0)
   averageAccuracy   Float        @default(0)
   snippetsCompleted Int          @default(0)
@@ -148,5 +148,5 @@ model Password {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([userId]) // Use userId as the primary key for this table
-  @@map("passwords") // Optional: map to a specific table name
+  @@map("passwords") // Map to a specific table name
 }
