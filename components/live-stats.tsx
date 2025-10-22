@@ -1,24 +1,20 @@
 'use client'
-
 import { useInterval } from "@/hooks/use-interval"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Slider } from "@/components/ui/slider"
 import { useState } from "react"
 import { Play, Pause, Timer, RotateCw } from "lucide-react"
-
 export function LiveStats() {
   const [count, setCount] = useState<number>(0)
   const [delay, setDelay] = useState<number>(1000)
   const [isPlaying, setPlaying] = useState<boolean>(false)
-
   useInterval(
     () => {
       setCount(count + 1)
     },
     isPlaying ? delay : null
   )
-
   return (
     <section className="py-16 md:py-24 bg-background">
       <div className="container mx-auto px-6">
@@ -32,7 +28,6 @@ export function LiveStats() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-          {/* Left Column - Interactive Demo */}
           <Card className="p-6 border-border/50">
             <div className="space-y-6">
               <div className="space-y-2">
@@ -43,12 +38,9 @@ export function LiveStats() {
               </div>
 
               <div className="flex flex-col items-center space-y-4">
-                {/* Counter Display */}
                 <div className="text-6xl font-bold tabular-nums text-primary">
                   {count}
                 </div>
-
-                {/* Controls */}
                 <div className="flex gap-2">
                   <Button
                     variant="outline"
@@ -89,7 +81,6 @@ export function LiveStats() {
                   className="py-4"
                 />
               </div>
-
               <div className="text-sm text-muted-foreground bg-muted p-3 rounded-lg">
                 Status: {isPlaying ? (
                   <span className="font-semibold text-green-400">Running</span>
@@ -99,8 +90,6 @@ export function LiveStats() {
               </div>
             </div>
           </Card>
-
-          {/* Right Column - Documentation */}
           <Card className="p-6 border-border/50">
             <div className="space-y-6">
               <div>
@@ -109,7 +98,6 @@ export function LiveStats() {
                   A declarative interval hook that can be paused and resumed.
                 </p>
               </div>
-
               <div className="space-y-4">
                 <pre className="bg-muted p-4 rounded-md text-xs overflow-x-auto">
                   <code>
@@ -125,7 +113,6 @@ useInterval(
 )`}
                   </code>
                 </pre>
-
                 <div className="space-y-4">
                   <div>
                     <h4 className="text-sm font-medium mb-2">Features</h4>
@@ -136,7 +123,6 @@ useInterval(
                       <li>TypeScript ready</li>
                     </ul>
                   </div>
-
                   <div>
                     <h4 className="text-sm font-medium mb-2">Common Use Cases</h4>
                     <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
@@ -146,7 +132,6 @@ useInterval(
                       <li>Animations</li>
                     </ul>
                   </div>
-
                   <div className="text-sm text-muted-foreground p-3 bg-muted/50 rounded-lg">
                     <p className="font-medium mb-1">Pro Tip:</p>
                     Pass <code className="text-xs bg-background/50 px-1 py-0.5 rounded">null</code> as the delay to pause the interval.
