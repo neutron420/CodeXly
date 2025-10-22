@@ -76,6 +76,7 @@ model User {
   results  Result[]
 
   languageStats UserLanguageStats[]
+  password Password? // added hassing passowrd model relation
 }
 
 model Language {
@@ -138,4 +139,14 @@ model UserLanguageStats {
 
   @@unique([userId, languageName]) 
   @@index([userId])
+}
+
+// added hassing passowrd model relation
+model Password {
+  hash   String
+  userId String @unique // Links one-to-one back to the User's id
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId]) // Use userId as the primary key for this table
+  @@map("passwords") // Optional: map to a specific table name
 }
