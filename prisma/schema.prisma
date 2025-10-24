@@ -76,7 +76,8 @@ model User {
   results  Result[]
 
   languageStats UserLanguageStats[]
-  password Password? // added hassing passowrd model relation
+  password Password? 
+  passwordResetTokens PasswordResetToken[]
 }
 
 model Language {
@@ -147,6 +148,19 @@ model Password {
   userId String @unique // Links one-to-one back to the User's id
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@id([userId]) // Use userId as the primary key for this table
-  @@map("passwords") // Map to a specific table name
+  @@id([userId]) 
+  @@map("passwords") 
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  userId    String   
+  token     String   
+  expiresAt DateTime 
+  createdAt DateTime @default(now())  
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([createdAt])
 }
