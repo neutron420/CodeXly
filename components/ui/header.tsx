@@ -84,10 +84,10 @@ function Header1() {
                                         </Link>
                                     ) : (
                                         <>
-                                            <NavigationMenuTrigger className="text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 bg-transparent focus:bg-white/10 data-[active]:bg-white/10 data-[state=open]:bg-white/10">
+                                            <NavigationMenuTrigger className="text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 bg-transparent focus:bg-white/10 data-active:bg-white/10 data-[state=open]:bg-white/10">
                                                 {item.title}
                                             </NavigationMenuTrigger>
-                                            <NavigationMenuContent className="!w-[450px] p-4 bg-popover text-popover-foreground border border-border">
+                                            <NavigationMenuContent className="w-[450px]! p-4 bg-popover text-popover-foreground border border-border">
                                                 <div className="flex flex-col lg:grid grid-cols-2 gap-4">
                                                     <div className="flex flex-col h-full justify-between">
                                                         <div className="flex flex-col">
