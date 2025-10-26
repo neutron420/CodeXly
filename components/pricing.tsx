@@ -83,7 +83,7 @@ export function Pricing({
         <label className="relative inline-flex items-center cursor-pointer">
           <Label>
             <Switch
-              ref={switchRef as any}
+              ref={switchRef}
               checked={!isMonthly}
               onCheckedChange={handleToggle}
               className="relative"
@@ -120,12 +120,12 @@ export function Pricing({
               opacity: { duration: 0.5 },
             }}
             className={cn(
-              `rounded-2xl border-[1px] p-6 bg-background text-center lg:flex lg:flex-col lg:justify-center relative`,
+              `rounded-2xl border p-6 bg-background text-center lg:flex lg:flex-col lg:justify-center relative`,
               plan.isPopular ? "border-primary border-2" : "border-border",
               "flex flex-col",
               !plan.isPopular && "mt-5",
               index === 0 || index === 2
-                ? "z-0 transform translate-x-0 translate-y-0 -translate-z-[50px] rotate-y-[10deg]"
+                ? "z-0 transform translate-x-0 translate-y-0 -translate-z-[50px] rotate-y-10"
                 : "z-10",
               index === 0 && "origin-right",
               index === 2 && "origin-left"
@@ -155,11 +155,6 @@ export function Pricing({
                       minimumFractionDigits: 0,
                       maximumFractionDigits: 0,
                     }}
-                    formatter={(value) => `$${value}`}
-                    transformTiming={{
-                      duration: 500,
-                      easing: "ease-out",
-                    }}
                     willChange
                     className="font-variant-numeric: tabular-nums"
                   />
@@ -178,7 +173,7 @@ export function Pricing({
               <ul className="mt-5 gap-2 flex flex-col">
                 {plan.features.map((feature, idx) => (
                   <li key={idx} className="flex items-start gap-2">
-                    <Check className="h-4 w-4 text-primary mt-1 flex-shrink-0" />
+                    <Check className="h-4 w-4 text-primary mt-1 shrink-0" />
                     <span className="text-left">{feature}</span>
                   </li>
                 ))}

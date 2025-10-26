@@ -1,5 +1,5 @@
 import { Activity, DraftingCompass, Mail, Zap } from 'lucide-react'
-
+import Image from 'next/image';
 export function Features() {
     return (
         <section className="py-16 md:py-32">
@@ -30,9 +30,9 @@ export function Features() {
                         </ul>
                     </div>
                     <div className="border-border/50 relative rounded-3xl border p-3 lg:col-span-3">
-                        <div className="bg-gradient-to-b aspect-76/59 relative rounded-2xl from-zinc-300 to-transparent p-px dark:from-zinc-700">
-                            <img src="https://tailark.com/_next/image?url=%2Fpayments.png&w=3840&q=75" className="hidden rounded-[15px] dark:block" alt="payments illustration dark" width={1207} height={929} />
-                            <img src="https://tailark.com/_next/image?url=%2Fpayments-light.png&w=3840&q=75" className="rounded-[15px] shadow dark:hidden" alt="payments illustration light" width={1207} height={929} />
+                        <div className="bg-linear-to-b aspect-76/59 relative rounded-2xl from-zinc-300 to-transparent p-px dark:from-zinc-700">
+                            <Image src="https://tailark.com/_next/image?url=%2Fpayments.png&w=3840&q=75" className="hidden rounded-[15px] dark:block" alt="payments illustration dark" width={1207} height={929} />
+                            <Image src="https://tailark.com/_next/image?url=%2Fpayments-light.png&w=3840&q=75" className="rounded-[15px] shadow dark:hidden" alt="payments illustration light" width={1207} height={929} />
                         </div>
                     </div>
                 </div>

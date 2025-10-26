@@ -5,13 +5,13 @@ import { Canvas, useFrame, extend } from '@react-three/fiber';
 import { shaderMaterial } from '@react-three/drei';
 import * as THREE from 'three';
 
+
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { SplitText } from 'gsap/SplitText';
 
 gsap.registerPlugin(SplitText, useGSAP);
 
-// ===================== SHADER =====================
 const vertexShader = `
   varying vec2 vUv;
   void main() {
@@ -164,7 +164,7 @@ extend({ CPPNShaderMaterial });
 
 function ShaderPlane() {
   const meshRef = useRef<THREE.Mesh>(null!);
-  const materialRef = useRef<any>(null!);
+  const materialRef = useRef<THREE.ShaderMaterial & { iTime: number; iResolution: THREE.Vector2 }>(null!);
 
   useFrame((state) => {
     if (!materialRef.current) return;
@@ -175,9 +175,8 @@ function ShaderPlane() {
 
   return (
     <mesh ref={meshRef} position={[0, -0.75, -0.5]}>
-      {/* Changed the size from [4, 4] to [8, 8] to cover the full screen */}
       <planeGeometry args={[8, 8]} />
-      <cPPNShaderMaterial ref={materialRef} side={THREE.DoubleSide} />
+      <cPPNShaderMaterial ref={materialRef} side={THREE.DoubleSide} attach="material" />
     </mesh>
   );
 }
@@ -219,7 +218,7 @@ function ShaderBackground() {
       >
         <ShaderPlane />
       </Canvas>
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-black/20" />
+      <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/30 via-transparent to-black/20" />
     </div>
   );
 }
@@ -369,13 +368,13 @@ export default function Hero({
         </ul>
       </div>
 
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/40 to-transparent" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-linear-to-t from-black/40 to-transparent" />
     </section>
   );
 }
 
 declare module '@react-three/fiber' {
   interface ThreeElements {
-    cPPNShaderMaterial: any;
+    cPPNShaderMaterial: React.JSX.IntrinsicElements['shaderMaterial'];
   }
 }
