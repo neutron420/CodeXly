@@ -239,7 +239,7 @@ export default function Hero({
   badgeText = "Generative Surfaces",
   badgeLabel = "New",
   ctaButtons = [
-    { text: "Get started", href: "#get-started", primary: true },
+    { text: "Let’s practice", href: "/practice", primary: true },
     { text: "View showcase", href: "#showcase" }
   ],
   microDetails = ["Low‑weight font", "Tight tracking", "Subtle motion"]

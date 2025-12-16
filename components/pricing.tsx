@@ -12,6 +12,12 @@ import { useState, useRef } from "react";
 import confetti from "canvas-confetti";
 import NumberFlow from "@number-flow/react";
 
+declare global {
+  interface Window {
+    Razorpay?: any;
+  }
+}
+
 interface PricingPlan {
   name: string;
   price: string;
@@ -66,6 +72,55 @@ export function Pricing({
         shapes: ["circle"],
       });
     }
+  };
+
+  const loadRazorpay = () =>
+    new Promise<boolean>((resolve) => {
+      if (window.Razorpay) {
+        resolve(true);
+        return;
+      }
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+
+  const handleCheckout = async (plan: PricingPlan, billingPeriod: "month" | "year") => {
+    const ok = await loadRazorpay();
+    if (!ok || !window.Razorpay) {
+      // Fallback: send user to signup page
+      window.location.href = plan.href;
+      return;
+    }
+
+    const key = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
+    if (!key) {
+      window.location.href = plan.href;
+      return;
+    }
+
+    const amountNumber =
+      billingPeriod === "month" ? Number(plan.price) : Number(plan.yearlyPrice);
+
+    const options = {
+      key,
+      amount: amountNumber * 100, // INR to paise
+      currency: "INR",
+      name: "CodeXly",
+      description: `${plan.name} – ${billingPeriod === "month" ? "Monthly" : "Yearly"} plan`,
+      notes: {
+        plan: plan.name,
+        period: billingPeriod,
+      },
+      theme: {
+        color: "#f97316",
+      },
+    };
+
+    const rz = new window.Razorpay(options);
+    rz.open();
   };
 
   return (
@@ -151,7 +206,7 @@ export function Pricing({
                     }
                     format={{
                       style: "currency",
-                      currency: "USD",
+                      currency: "INR",
                       minimumFractionDigits: 0,
                       maximumFractionDigits: 0,
                     }}
@@ -181,8 +236,9 @@ export function Pricing({
 
               <hr className="w-full my-4" />
 
-              <Link
-                href={plan.href}
+              <button
+                type="button"
+                onClick={() => handleCheckout(plan, isMonthly ? "month" : "year")}
                 className={cn(
                   buttonVariants({
                     variant: "outline",
@@ -195,7 +251,7 @@ export function Pricing({
                 )}
               >
                 {plan.buttonText}
-              </Link>
+              </button>
               <p className="mt-6 text-xs leading-5 text-muted-foreground">
                 {plan.description}
               </p>

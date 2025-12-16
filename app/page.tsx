@@ -10,8 +10,8 @@ import { FaqsSection } from "@/components/faqs-1";
 const pricingPlans = [
   {
     name: "Starter",
-    price: "19",
-    yearlyPrice: "180",
+    price: "99",
+    yearlyPrice: "999",
     period: "month",
     features: [
       "Access to core features",
@@ -20,14 +20,14 @@ const pricingPlans = [
       "Email support",
     ],
     description: "Ideal for individuals starting out.",
-    buttonText: "Get Started",
+    buttonText: "Start with Starter",
     href: "/signup/starter",
     isPopular: false,
   },
   {
     name: "Pro",
-    price: "49",
-    yearlyPrice: "470",
+    price: "199",
+    yearlyPrice: "1999",
     period: "month",
     features: [
       "All Starter features",
@@ -37,14 +37,14 @@ const pricingPlans = [
       "Priority email support",
     ],
     description: "Perfect for professionals and small teams.",
-    buttonText: "Choose Pro",
+    buttonText: "Upgrade to Pro",
     href: "/signup/pro",
     isPopular: true,
   },
   {
     name: "Enterprise",
-    price: "99",
-    yearlyPrice: "950",
+    price: "599",
+    yearlyPrice: "5999",
     period: "month",
     features: [
       "All Pro features",
@@ -54,7 +54,7 @@ const pricingPlans = [
       "24/7 premium support",
     ],
     description: "Tailored for large organizations.",
-    buttonText: "Contact Sales",
+    buttonText: "Talk to sales",
     href: "/contact-sales",
     isPopular: false,
   },

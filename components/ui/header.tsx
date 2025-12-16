@@ -36,6 +36,11 @@ function Header1() {
             href: "/",
             description: "",
         },
+        {
+            title: "Leaderboard",
+            href: "/leaderboard",
+            description: "See who is leading the practice board.",
+        },
         { // Example dropdown item
             title: "Product",
             description: "Explore our features.",
@@ -65,8 +70,8 @@ function Header1() {
 
 
     return (
-        <header className="w-full z-40 fixed top-0 left-0 bg-transparent backdrop-blur-sm border-b border-border/40"> {/* Added subtle border */}
-            <div className="container relative mx-auto min-h-20 flex gap-4 flex-row lg:grid lg:grid-cols-3 items-center">
+        <header className="w-full z-40 fixed top-0 left-0 bg-transparent backdrop-blur-sm border-b border-border/40">
+            <div className="container relative mx-auto min-h-14 py-2 px-4 flex gap-3 flex-row lg:grid lg:grid-cols-3 items-center">
                 {/* --- Left Navigation --- */}
                 <div className="justify-start items-center gap-2 lg:flex hidden flex-row"> {/* Reduced gap */}
                     <NavigationMenu className="flex justify-start items-start">
@@ -183,7 +188,7 @@ function Header1() {
                         </Button>
                         {/* <div className="border-r border-white/20 hidden md:inline h-6"></div> */}
                         <Button className="text-sm" asChild>
-                          <Link href="/signup">Get started</Link>
+                          <Link href="/practice">Start practice</Link>
                         </Button>
                       </>
                       // --- End Logged Out State ---
@@ -264,7 +269,7 @@ function Header1() {
                                        <Link href="/signin">Sign in</Link>
                                      </Button>
                                      <Button asChild onClick={() => setOpen(false)}>
-                                       <Link href="/signup">Get started</Link>
+                                       <Link href="/practice">Start practice</Link>
                                      </Button>
                                    </>
                                  )}

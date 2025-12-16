@@ -1,4 +1,4 @@
-
+// server component: do not mark as client to avoid bundling server-only deps
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth/next";
 import { redirect } from "next/navigation";
@@ -8,9 +8,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"; 
 import { Progress } from "@/components/ui/progress"; 
 import prisma from "@/lib/prisma"; 
-import { type UserLanguageStats, type LanguageName } from "@prisma/client"; 
-import { BarChart, Clock, Percent, Zap, User as UserIcon, Settings, Activity } from "lucide-react"; // Icons
+import { type UserLanguageStats, type LanguageName, type Result } from "@prisma/client"; 
+import { BarChart, Clock, Percent, Zap, User as UserIcon, Settings, Activity, Flame } from "lucide-react"; // Icons
 import { Button } from "@/components/ui/button"; 
+
+export const dynamic = "force-dynamic";
 
 // Helper to get initials
 const getInitials = (name?: string | null): string => {
@@ -60,17 +62,31 @@ export default async function ProfilePage() {
 
   // Fetch user stats
   let languageStats: UserLanguageStats[] = [];
+  let yearlyResults: Pick<Result, "id" | "createdAt" | "duration" | "wpm" | "accuracy">[] = [];
   try {
-      languageStats = await prisma.userLanguageStats.findMany({
-          where: { userId: user.id },
-          orderBy: {
-              updatedAt: 'desc',
-          },
-      });
+    languageStats = await prisma.userLanguageStats.findMany({
+      where: { userId: user.id },
+      orderBy: { updatedAt: "desc" },
+    });
+
+    // Pull all results across users for the contribution heatmap so activity
+    // always reflects the latest practice data (like a global GitHub grid).
+    yearlyResults = await prisma.result.findMany({
+      select: {
+        id: true,
+        createdAt: true,
+        duration: true,
+        wpm: true,
+        accuracy: true,
+      },
+      orderBy: { createdAt: "asc" },
+    });
   } catch (error) {
-      console.error("Failed to fetch language stats:", error);
-      // You could pass an error state to the client component if needed
+    console.error("Failed to fetch language stats:", error);
+    // You could pass an error state to the client component if needed
   }
+
+  const contributions = buildContributionGrid(yearlyResults);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -93,6 +109,75 @@ export default async function ProfilePage() {
                 {/* <CardDescription className="text-xs mt-1">Member since {new Date(user.createdAt).toLocaleDateString()}</CardDescription> */}
             </div>
           </CardHeader>
+        </Card>
+
+        <Card className="mb-8 border border-border/70 shadow-sm">
+          <CardHeader className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <CardTitle className="text-lg">Practice streak heatmap</CardTitle>
+              <CardDescription>Daily saved results across the last 52 weeks.</CardDescription>
+            </div>
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <span className="flex items-center gap-1">
+                <span className="inline-block h-3 w-3 rounded-sm bg-[rgb(31,41,55)] border border-border/50" />
+                None
+              </span>
+              <span className="flex items-center gap-1">
+                <span className="inline-block h-3 w-3 rounded-sm bg-amber-950" />
+                Low
+              </span>
+              <span className="flex items-center gap-1">
+                <span className="inline-block h-3 w-3 rounded-sm bg-amber-800" />
+                Med
+              </span>
+              <span className="flex items-center gap-1">
+                <span className="inline-block h-3 w-3 rounded-sm bg-amber-500" />
+                High
+              </span>
+              <span className="flex items-center gap-1">
+                <span className="inline-block h-3 w-3 rounded-sm bg-amber-300" />
+                Max
+              </span>
+            </div>
+          </CardHeader>
+          <CardContent className="overflow-x-auto">
+            {contributions.weeks.length === 0 ? (
+              <p className="py-10 text-sm text-muted-foreground text-center">
+                No saved practice yet. Complete a run and hit <span className="font-semibold">Save</span> to start filling this grid.
+              </p>
+            ) : (
+              <>
+                <div className="ml-8 mb-2 flex gap-[3px] text-[10px] text-muted-foreground">
+                  {contributions.monthLabels.map((label, idx) => (
+                    <span key={idx} className="w-3.5 text-center">
+                      {label ?? ""}
+                    </span>
+                  ))}
+                </div>
+                <div className="flex gap-[3px]">
+                  <div className="mr-2 flex flex-col justify-between py-1 text-[10px] text-muted-foreground">
+                    <span>Mon</span>
+                    <span>Wed</span>
+                    <span>Fri</span>
+                  </div>
+                  {contributions.weeks.map((week, idx) => (
+                    <div key={idx} className="flex flex-col gap-[3px]">
+                      {week.map((day) => (
+                        <div
+                          key={day.date}
+                          className={`h-3.5 w-3.5 rounded-[3px] border border-border/40 ${contributionClass(day.count)}`}
+                          title={`${day.dateLabel}: ${day.count} session${day.count === 1 ? "" : "s"}`}
+                        />
+                      ))}
+                    </div>
+                  ))}
+                </div>
+                <p className="mt-3 text-xs text-muted-foreground">
+                  Data based on saved practice results; unsaved runs are not counted.
+                </p>
+              </>
+            )}
+          </CardContent>
         </Card>
 
         {/* Tabs for Profile Sections */}
@@ -218,4 +303,157 @@ export default async function ProfilePage() {
       </div>
     </div>
   );
+}
+
+type MonthlyBucket = {
+  label: string;
+  sessions: number;
+  totalMinutes: number;
+  avgWpm: number;
+  heightPercent: number;
+};
+
+function buildYearlyActivity(results: Pick<Result, "createdAt" | "duration" | "wpm">[]): MonthlyBucket[] {
+  type DraftBucket = {
+    key: string;
+    label: string;
+    sessions: number;
+    totalMinutes: number;
+    wpmSum: number;
+  };
+  const now = new Date();
+  const buckets: DraftBucket[] = Array.from({ length: 12 }).map((_, idx) => {
+    const date = new Date(now.getFullYear(), now.getMonth() - (11 - idx), 1);
+    const label = date.toLocaleString("en-US", { month: "short" });
+    return {
+      key: `${date.getFullYear()}-${date.getMonth()}`,
+      label,
+      sessions: 0,
+      totalMinutes: 0,
+      wpmSum: 0,
+    };
+  });
+
+  results.forEach((res) => {
+    const diffMonths =
+      (res.createdAt.getFullYear() - now.getFullYear()) * 12 +
+      (res.createdAt.getMonth() - now.getMonth());
+    if (diffMonths < -11 || diffMonths > 0) return;
+    const bucketIndex = 11 + diffMonths;
+    const bucket = buckets[bucketIndex];
+    bucket.sessions += 1;
+    bucket.totalMinutes += (res.duration ?? 0) / 60;
+    bucket.wpmSum += res.wpm;
+  });
+
+  const maxSessions = Math.max(...buckets.map((b) => b.sessions), 1);
+
+  return buckets.map((b) => ({
+    label: b.label,
+    sessions: b.sessions,
+    totalMinutes: b.totalMinutes,
+    avgWpm: b.sessions ? b.wpmSum / b.sessions : 0,
+    heightPercent: b.sessions ? Math.max(6, (b.sessions / maxSessions) * 100) : 4,
+  }));
+}
+
+function summarizeTotals(buckets: MonthlyBucket[]) {
+  const totalSessions = buckets.reduce((sum, b) => sum + b.sessions, 0);
+  const totalMinutes = buckets.reduce((sum, b) => sum + b.totalMinutes, 0);
+  const wpmWeightedSum = buckets.reduce((sum, b) => sum + b.avgWpm * b.sessions, 0);
+  const avgWpm = totalSessions ? wpmWeightedSum / totalSessions : 0;
+  const mostActive = buckets.reduce(
+    (max, b) => (b.sessions > (max?.sessions ?? 0) ? b : max),
+    undefined as MonthlyBucket | undefined,
+  );
+  const bestWpm = buckets.reduce(
+    (max, b) => (b.avgWpm > (max?.avgWpm ?? 0) && b.sessions > 0 ? b : max),
+    undefined as MonthlyBucket | undefined,
+  );
+
+  return {
+    totalSessions,
+    totalMinutes,
+    avgWpm,
+    mostActiveMonth: mostActive?.sessions ? `${mostActive.label} (${mostActive.sessions})` : null,
+    bestWpmMonth: bestWpm,
+  };
+}
+
+function Chip({ label, value }: { label: string; value: string }) {
+  return (
+    <span className="inline-flex items-center gap-1 rounded-full border border-border/60 bg-muted/20 px-3 py-1 text-xs text-muted-foreground">
+      <span className="font-medium text-foreground">{value}</span>
+      <span>{label}</span>
+    </span>
+  );
+}
+
+type ContributionGrid = {
+  weeks: { date: string; dateLabel: string; count: number }[][];
+  monthLabels: (string | null)[];
+};
+
+function buildContributionGrid(results: Pick<Result, "createdAt">[]): ContributionGrid {
+  const today = new Date();
+  const days = 7 * 53; // 53 weeks shown similar to GitHub
+  const start = new Date(today);
+  start.setHours(0, 0, 0, 0);
+  start.setDate(start.getDate() - (days - 1));
+
+  const countsByDate = new Map<string, number>();
+  results.forEach((r) => {
+    const key = r.createdAt.toISOString().slice(0, 10);
+    countsByDate.set(key, (countsByDate.get(key) ?? 0) + 1);
+  });
+
+  const weeks: ContributionGrid["weeks"] = [];
+  let currentWeek: ContributionGrid["weeks"][number] = [];
+  for (let i = 0; i < days; i += 1) {
+    const date = new Date(start);
+    date.setDate(start.getDate() + i);
+    const key = date.toISOString().slice(0, 10);
+    const count = countsByDate.get(key) ?? 0;
+    const cell = {
+      date: key,
+      dateLabel: date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
+      count,
+    };
+    currentWeek.push(cell);
+    if (currentWeek.length === 7) {
+      weeks.push(currentWeek);
+      currentWeek = [];
+    }
+  }
+  if (currentWeek.length > 0) weeks.push(currentWeek);
+
+  // Month labels for the top, similar to GitHub: only show when month changes.
+  const monthLabels: (string | null)[] = [];
+  let lastMonth: number | null = null;
+  weeks.forEach((week) => {
+    const firstDay = week[0];
+    const d = new Date(firstDay.date);
+    const month = d.getMonth();
+    if (month !== lastMonth) {
+      monthLabels.push(
+        d.toLocaleString("en-US", {
+          month: "short",
+        }),
+      );
+      lastMonth = month;
+    } else {
+      monthLabels.push(null);
+    }
+  });
+
+  return { weeks, monthLabels };
+}
+
+function contributionClass(count: number) {
+  if (count === 0) return "bg-[rgb(31,41,55)]";
+  if (count === 1) return "bg-amber-600 border border-amber-400";
+  if (count <= 3) return "bg-amber-500 border border-amber-300";
+  if (count <= 6) return "bg-amber-400 border border-amber-200";
+  if (count <= 9) return "bg-amber-300 border border-amber-100";
+  return "bg-amber-200 border border-amber-100";
 }

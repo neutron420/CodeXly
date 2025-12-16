@@ -15,10 +15,7 @@ const otpBlockLimiter = new RateLimiterMemory({
     duration: 5 * 60,
     keyPrefix: 'otp_request_block',
 });
-// --- End Rate Limiter Config ---
 
-
-// --- Cloudflare Turnstile Verification Function ---
 async function verifyTurnstileToken(token: string | undefined | null, remoteIp?: string | null): Promise<boolean> {
     const secretKey = process.env.CLOUDFLARE_TURNSTILE_SECRET_KEY;
 
@@ -27,7 +24,7 @@ async function verifyTurnstileToken(token: string | undefined | null, remoteIp?:
         // !! In production, you should likely return false here unless explicitly configured otherwise.
         // For development, you might allow it to pass, but log a warning.
         // return false;
-        return true; // TEMPORARY for dev if key is missing, REMOVE FOR PRODUCTION
+        return true; 
     }
 
     if (!token) {
