@@ -88,17 +88,6 @@ export async function GET(req: NextRequest) {
       create: { name: languageParam },
     });
 
-    const topicFilter = topicParam
-      ? {
-          topic: {
-            name: {
-              equals: topicParam,
-              mode: "insensitive",
-            },
-          },
-        }
-      : {};
-
     const total = await prisma.snippet.count({
       where: {
         languageId: languageRow.id,
@@ -110,7 +99,7 @@ export async function GET(req: NextRequest) {
                   equals: topicParam,
                   mode: "insensitive",
                 },
-              } as any, 
+              },
             }
           : {}),
       },
@@ -129,7 +118,7 @@ export async function GET(req: NextRequest) {
                     equals: topicParam,
                     mode: "insensitive",
                   },
-                } as any, // Satisfy TypeScript for Prisma relation
+                },
               }
             : {}),
         },

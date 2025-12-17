@@ -7,14 +7,29 @@ import { useMediaQuery } from "@/hooks/use-media-query";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { Check, Star } from "lucide-react";
-import Link from "next/link";
 import { useState, useRef } from "react";
 import confetti from "canvas-confetti";
 import NumberFlow from "@number-flow/react";
 
+type RazorpayTheme = {
+  color?: string;
+};
+
+type RazorpayNotes = Record<string, string | number | boolean | null | undefined>;
+
+type RazorpayOptions = {
+  key: string;
+  amount: number;
+  currency: string;
+  name?: string;
+  description?: string;
+  notes?: RazorpayNotes;
+  theme?: RazorpayTheme;
+};
+
 declare global {
   interface Window {
-    Razorpay?: any;
+    Razorpay?: new (options: RazorpayOptions) => { open: () => void };
   }
 }
 

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import prisma from "@/lib/prisma";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { Difficulty, LanguageName } from "@prisma/client";
 
 type ResultPayload = {
   snippetId: string | null;
@@ -56,9 +57,9 @@ export async function POST(request: Request) {
       }
 
       const languageRow = await prisma.language.upsert({
-        where: { name: languageName as any },
+        where: { name: languageName as LanguageName },
         update: {},
-        create: { name: languageName as any },
+        create: { name: languageName as LanguageName },
       });
 
       const topicRow = await prisma.topic.upsert({
@@ -71,7 +72,7 @@ export async function POST(request: Request) {
         data: {
           languageId: languageRow.id,
           topicId: topicRow.id,
-          difficulty: (difficulty as any) ?? "BEGINNER",
+          difficulty: (difficulty as Difficulty) ?? Difficulty.BEGINNER,
           content: "// practice sample (auto-created for stats)",
         },
       });
