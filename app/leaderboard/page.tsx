@@ -2,7 +2,7 @@ import { Header1 } from "@/components/ui/header";
 import prisma from "@/lib/prisma";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Trophy, User as UserIcon, Target, Gauge } from "lucide-react";
+import { Trophy, Target, Gauge } from "lucide-react";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";

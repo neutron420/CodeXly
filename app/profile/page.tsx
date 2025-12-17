@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress"; 
 import prisma from "@/lib/prisma"; 
 import { type UserLanguageStats, type LanguageName, type Result } from "@prisma/client"; 
-import { BarChart, Clock, Percent, Zap, User as UserIcon, Settings, Activity, Flame } from "lucide-react"; // Icons
+import { BarChart, Clock, Percent, Zap, User as UserIcon, Settings, Activity } from "lucide-react"; // Icons
 import { Button } from "@/components/ui/button"; 
 
 export const dynamic = "force-dynamic";
@@ -302,90 +302,6 @@ export default async function ProfilePage() {
         </Tabs>
       </div>
     </div>
-  );
-}
-
-type MonthlyBucket = {
-  label: string;
-  sessions: number;
-  totalMinutes: number;
-  avgWpm: number;
-  heightPercent: number;
-};
-
-function buildYearlyActivity(results: Pick<Result, "createdAt" | "duration" | "wpm">[]): MonthlyBucket[] {
-  type DraftBucket = {
-    key: string;
-    label: string;
-    sessions: number;
-    totalMinutes: number;
-    wpmSum: number;
-  };
-  const now = new Date();
-  const buckets: DraftBucket[] = Array.from({ length: 12 }).map((_, idx) => {
-    const date = new Date(now.getFullYear(), now.getMonth() - (11 - idx), 1);
-    const label = date.toLocaleString("en-US", { month: "short" });
-    return {
-      key: `${date.getFullYear()}-${date.getMonth()}`,
-      label,
-      sessions: 0,
-      totalMinutes: 0,
-      wpmSum: 0,
-    };
-  });
-
-  results.forEach((res) => {
-    const diffMonths =
-      (res.createdAt.getFullYear() - now.getFullYear()) * 12 +
-      (res.createdAt.getMonth() - now.getMonth());
-    if (diffMonths < -11 || diffMonths > 0) return;
-    const bucketIndex = 11 + diffMonths;
-    const bucket = buckets[bucketIndex];
-    bucket.sessions += 1;
-    bucket.totalMinutes += (res.duration ?? 0) / 60;
-    bucket.wpmSum += res.wpm;
-  });
-
-  const maxSessions = Math.max(...buckets.map((b) => b.sessions), 1);
-
-  return buckets.map((b) => ({
-    label: b.label,
-    sessions: b.sessions,
-    totalMinutes: b.totalMinutes,
-    avgWpm: b.sessions ? b.wpmSum / b.sessions : 0,
-    heightPercent: b.sessions ? Math.max(6, (b.sessions / maxSessions) * 100) : 4,
-  }));
-}
-
-function summarizeTotals(buckets: MonthlyBucket[]) {
-  const totalSessions = buckets.reduce((sum, b) => sum + b.sessions, 0);
-  const totalMinutes = buckets.reduce((sum, b) => sum + b.totalMinutes, 0);
-  const wpmWeightedSum = buckets.reduce((sum, b) => sum + b.avgWpm * b.sessions, 0);
-  const avgWpm = totalSessions ? wpmWeightedSum / totalSessions : 0;
-  const mostActive = buckets.reduce(
-    (max, b) => (b.sessions > (max?.sessions ?? 0) ? b : max),
-    undefined as MonthlyBucket | undefined,
-  );
-  const bestWpm = buckets.reduce(
-    (max, b) => (b.avgWpm > (max?.avgWpm ?? 0) && b.sessions > 0 ? b : max),
-    undefined as MonthlyBucket | undefined,
-  );
-
-  return {
-    totalSessions,
-    totalMinutes,
-    avgWpm,
-    mostActiveMonth: mostActive?.sessions ? `${mostActive.label} (${mostActive.sessions})` : null,
-    bestWpmMonth: bestWpm,
-  };
-}
-
-function Chip({ label, value }: { label: string; value: string }) {
-  return (
-    <span className="inline-flex items-center gap-1 rounded-full border border-border/60 bg-muted/20 px-3 py-1 text-xs text-muted-foreground">
-      <span className="font-medium text-foreground">{value}</span>
-      <span>{label}</span>
-    </span>
   );
 }
 
