@@ -1,17 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Header1 } from "@/components/ui/header";
 import { PracticeSidebar } from "@/components/practice-sidebar";
-import {
-  AlertCircle,
-  CheckCircle2,
-  Gauge,
-  Target,
-  Timer,
-} from "lucide-react";
+import { AlertCircle, CheckCircle2, Timer } from "lucide-react";
 
 type LanguageName =
   | "C"
@@ -151,6 +145,53 @@ export default function PracticePage() {
     };
   }, [typed, targetSnippet, elapsedSeconds, durationTarget]);
 
+  const handleSaveResult = useCallback(async () => {
+    if (!snippet) {
+      setSaveMessage("No snippet loaded to save results for.");
+      return;
+    }
+
+    setSavingResult(true);
+    setSaveMessage(null);
+    try {
+      const res = await fetch("/api/practice/result", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          snippetId: snippet.id ?? null,
+          wpm: stats.wpm,
+          accuracy: stats.accuracy,
+          duration: elapsedSeconds,
+          languageName: snippet.languageName,
+          topicName: snippet.topicName,
+          difficulty,
+        }),
+      });
+
+      if (res.status === 401) {
+        setSaveMessage("Please sign in to save your results.");
+        return;
+      }
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || "Failed to save result.");
+      }
+
+      const payload = await res.json();
+      setSaveMessage(
+        `Saved. ${formatLanguage(language)} stats updated (best ${payload.bestWpm?.toFixed?.(1) ?? stats.wpm.toFixed(1)} WPM).`,
+      );
+    } catch (error) {
+      console.error(error);
+      setSaveMessage(
+        error instanceof Error ? error.message : "Something went wrong while saving.",
+      );
+    } finally {
+      setSavingResult(false);
+    }
+  }, [snippet, stats.wpm, stats.accuracy, elapsedSeconds, difficulty, language]);
+
   useEffect(() => {
     if (!isTimeUp || stats.typedLength === 0) return;
 
@@ -170,7 +211,7 @@ export default function PracticePage() {
     });
     setHasRedirected(true);
     router.push(`/practice/result?${params.toString()}`);
-  }, [isTimeUp, hasRedirected, autoSavedOnTimeUp, stats, elapsedSeconds, language, router, session, savingResult]);
+  }, [isTimeUp, hasRedirected, autoSavedOnTimeUp, stats, elapsedSeconds, language, router, session, savingResult, handleSaveResult]);
 
   const fetchSnippet = async (
     overrideLanguage?: LanguageName,
@@ -235,53 +276,6 @@ export default function PracticePage() {
     setSaveMessage(null);
   };
 
-  const handleSaveResult = async () => {
-    if (!snippet) {
-      setSaveMessage("No snippet loaded to save results for.");
-      return;
-    }
-
-    setSavingResult(true);
-    setSaveMessage(null);
-    try {
-      const res = await fetch("/api/practice/result", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          snippetId: snippet.id ?? null,
-          wpm: stats.wpm,
-          accuracy: stats.accuracy,
-          duration: elapsedSeconds,
-          languageName: snippet.languageName,
-          topicName: snippet.topicName,
-          difficulty,
-        }),
-      });
-
-      if (res.status === 401) {
-        setSaveMessage("Please sign in to save your results.");
-        return;
-      }
-
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.error || "Failed to save result.");
-      }
-
-      const payload = await res.json();
-      setSaveMessage(
-        `Saved. ${formatLanguage(language)} stats updated (best ${payload.bestWpm?.toFixed?.(1) ?? stats.wpm.toFixed(1)} WPM).`,
-      );
-    } catch (error) {
-      console.error(error);
-      setSaveMessage(
-        error instanceof Error ? error.message : "Something went wrong while saving.",
-      );
-    } finally {
-      setSavingResult(false);
-    }
-  };
-
   const snippetSource = snippet?.isSample
     ? "Sample snippet (add DB snippets to persist results)"
     : "Database snippet";
@@ -328,8 +322,6 @@ export default function PracticePage() {
             snippetSource={snippetSource}
             snippetTopic={snippet?.topicName}
             loadingSnippet={loadingSnippet}
-            isRunning={isRunning}
-            isTimeUp={isTimeUp}
             onStart={handleStart}
             onReset={handleReset}
             onNewSnippet={fetchSnippet}
@@ -500,17 +492,4 @@ function renderInlineSnippet(snippet: string, typed: string) {
   }
 
   return spans;
-}
-
-function StatCard(props: { icon: React.ReactNode; label: string; value: string; hint?: string }) {
-  return (
-    <div className="rounded-xl border border-border/70 bg-card/95 backdrop-blur p-3 md:p-4 space-y-2">
-      <div className="flex items-center gap-2 text-muted-foreground text-sm">
-        {props.icon}
-        <span>{props.label}</span>
-      </div>
-      <div className="text-2xl md:text-3xl font-semibold text-foreground">{props.value}</div>
-      {props.hint && <p className="text-xs text-muted-foreground leading-snug">{props.hint}</p>}
-    </div>
-  );
 }

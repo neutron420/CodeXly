@@ -39,8 +39,6 @@ type SidebarProps = {
   snippetSource: string;
   snippetTopic?: string | null;
   loadingSnippet: boolean;
-  isRunning: boolean;
-  isTimeUp: boolean;
   onStart: () => void;
   onReset: () => void;
   onNewSnippet: () => void;
@@ -65,8 +63,6 @@ export function PracticeSidebar({
   snippetSource,
   snippetTopic,
   loadingSnippet,
-  isRunning,
-  isTimeUp,
   onStart,
   onReset,
   onNewSnippet,
@@ -188,13 +184,7 @@ export function PracticeSidebar({
           Save
         </Button>
         <span className="ml-auto text-[11px] text-muted-foreground">
-          {loadingSnippet
-            ? "Loading..."
-            : isRunning
-              ? "Running"
-              : isTimeUp
-                ? "Time up"
-                : "Ready"}
+          {statusLabel}
         </span>
       </div>
     </aside>

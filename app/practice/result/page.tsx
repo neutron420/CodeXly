@@ -33,7 +33,6 @@ export default async function PracticeResultPage({ searchParams }: ResultPagePro
       return `${x},${y}`;
     },
   );
-  const pathD = `M ${samplePoints.join(" L ")}`;
 
   return (
     <div className="min-h-screen bg-background text-foreground">
