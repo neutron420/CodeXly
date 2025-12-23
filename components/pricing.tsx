@@ -8,30 +8,9 @@ import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { Check, Star } from "lucide-react";
 import { useState, useRef } from "react";
+import { useRouter } from "next/navigation";
 import confetti from "canvas-confetti";
 import NumberFlow from "@number-flow/react";
-
-type RazorpayTheme = {
-  color?: string;
-};
-
-type RazorpayNotes = Record<string, string | number | boolean | null | undefined>;
-
-type RazorpayOptions = {
-  key: string;
-  amount: number;
-  currency: string;
-  name?: string;
-  description?: string;
-  notes?: RazorpayNotes;
-  theme?: RazorpayTheme;
-};
-
-declare global {
-  interface Window {
-    Razorpay?: new (options: RazorpayOptions) => { open: () => void };
-  }
-}
 
 interface PricingPlan {
   name: string;
@@ -59,6 +38,7 @@ export function Pricing({
   const [isMonthly, setIsMonthly] = useState(true);
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const switchRef = useRef<HTMLButtonElement>(null);
+  const router = useRouter();
 
   const handleToggle = (checked: boolean) => {
     setIsMonthly(!checked);
@@ -87,55 +67,6 @@ export function Pricing({
         shapes: ["circle"],
       });
     }
-  };
-
-  const loadRazorpay = () =>
-    new Promise<boolean>((resolve) => {
-      if (window.Razorpay) {
-        resolve(true);
-        return;
-      }
-      const script = document.createElement("script");
-      script.src = "https://checkout.razorpay.com/v1/checkout.js";
-      script.onload = () => resolve(true);
-      script.onerror = () => resolve(false);
-      document.body.appendChild(script);
-    });
-
-  const handleCheckout = async (plan: PricingPlan, billingPeriod: "month" | "year") => {
-    const ok = await loadRazorpay();
-    if (!ok || !window.Razorpay) {
-      // Fallback: send user to signup page
-      window.location.href = plan.href;
-      return;
-    }
-
-    const key = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
-    if (!key) {
-      window.location.href = plan.href;
-      return;
-    }
-
-    const amountNumber =
-      billingPeriod === "month" ? Number(plan.price) : Number(plan.yearlyPrice);
-
-    const options = {
-      key,
-      amount: amountNumber * 100, // INR to paise
-      currency: "INR",
-      name: "CodeXly",
-      description: `${plan.name} – ${billingPeriod === "month" ? "Monthly" : "Yearly"} plan`,
-      notes: {
-        plan: plan.name,
-        period: billingPeriod,
-      },
-      theme: {
-        color: "#f97316",
-      },
-    };
-
-    const rz = new window.Razorpay(options);
-    rz.open();
   };
 
   return (
@@ -253,7 +184,13 @@ export function Pricing({
 
               <button
                 type="button"
-                onClick={() => handleCheckout(plan, isMonthly ? "month" : "year")}
+                onClick={() =>
+                  router.push(
+                    `/payment/checkout?plan=${encodeURIComponent(
+                      plan.name
+                    )}&billing=${isMonthly ? "month" : "year"}`
+                  )
+                }
                 className={cn(
                   buttonVariants({
                     variant: "outline",

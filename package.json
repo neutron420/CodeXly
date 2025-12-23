@@ -43,6 +43,7 @@
     "radix-ui": "^1.4.3",
     "rate-limiter": "^0.2.0",
     "rate-limiter-flexible": "^8.1.0",
+    "razorpay": "^2.9.6",
     "react": "19.1.0",
     "react-activity-calendar": "^2.7.15",
     "react-dom": "19.1.0",

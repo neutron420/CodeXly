@@ -34,6 +34,12 @@ jest.mock("next/server", () => {
   };
 });
 
+// Mock email to avoid network and background timers
+jest.mock("@/lib/email", () => ({
+  __esModule: true,
+  sendWelcomeEmail: jest.fn(async () => undefined),
+}));
+
 // Mock prisma client
 jest.mock("@/lib/prisma", () => {
   const user = {

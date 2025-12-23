@@ -107,51 +107,51 @@ export default async function LeaderboardPage() {
               <>
                 {/* Desktop Table View */}
                 <table className="hidden md:table w-full text-sm">
-                  <thead className="text-left text-muted-foreground">
-                    <tr className="border-b border-border/60">
-                      <th className="py-2 pr-4">Rank</th>
-                      <th className="py-2 pr-4">User</th>
-                      <th className="py-2 pr-4">Best WPM</th>
-                      <th className="py-2 pr-4">Best Accuracy</th>
-                      <th className="py-2 pr-4">Avg WPM</th>
-                      <th className="py-2">Runs</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {rows.map((row, idx) => (
-                      <tr
-                        key={row.userId}
-                        className="border-b border-border/40 last:border-0 hover:bg-muted/20 transition"
-                      >
-                        <td className="py-3 pr-4 font-semibold text-muted-foreground">#{idx + 1}</td>
-                        <td className="py-3 pr-4">
-                          <div className="flex items-center gap-3">
-                            <Avatar className="h-9 w-9">
-                              <AvatarImage src={row.image ?? undefined} alt={row.name} />
-                              <AvatarFallback>{getInitials(row.name)}</AvatarFallback>
-                            </Avatar>
-                            <div className="flex flex-col">
-                              <span className="font-medium text-foreground">{row.name}</span>
-                              {row.email ? (
-                                <span className="text-xs text-muted-foreground">{row.email}</span>
-                              ) : null}
-                            </div>
+                <thead className="text-left text-muted-foreground">
+                  <tr className="border-b border-border/60">
+                    <th className="py-2 pr-4">Rank</th>
+                    <th className="py-2 pr-4">User</th>
+                    <th className="py-2 pr-4">Best WPM</th>
+                    <th className="py-2 pr-4">Best Accuracy</th>
+                    <th className="py-2 pr-4">Avg WPM</th>
+                    <th className="py-2">Runs</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {rows.map((row, idx) => (
+                    <tr
+                      key={row.userId}
+                      className="border-b border-border/40 last:border-0 hover:bg-muted/20 transition"
+                    >
+                      <td className="py-3 pr-4 font-semibold text-muted-foreground">#{idx + 1}</td>
+                      <td className="py-3 pr-4">
+                        <div className="flex items-center gap-3">
+                          <Avatar className="h-9 w-9">
+                            <AvatarImage src={row.image ?? undefined} alt={row.name} />
+                            <AvatarFallback>{getInitials(row.name)}</AvatarFallback>
+                          </Avatar>
+                          <div className="flex flex-col">
+                            <span className="font-medium text-foreground">{row.name}</span>
+                            {row.email ? (
+                              <span className="text-xs text-muted-foreground">{row.email}</span>
+                            ) : null}
                           </div>
-                        </td>
-                        <td className="py-3 pr-4 font-semibold text-foreground flex items-center gap-1">
-                          <Gauge className="h-4 w-4 text-primary" />
-                          {row.bestWpm.toFixed(1)}
-                        </td>
-                        <td className="py-3 pr-4 text-foreground flex items-center gap-1">
-                          <Target className="h-4 w-4 text-emerald-500" />
-                          {row.bestAccuracy.toFixed(1)}%
-                        </td>
-                        <td className="py-3 pr-4 text-foreground">{row.avgWpm.toFixed(1)}</td>
-                        <td className="py-3 text-foreground">{row.runs}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                        </div>
+                      </td>
+                      <td className="py-3 pr-4 font-semibold text-foreground flex items-center gap-1">
+                        <Gauge className="h-4 w-4 text-primary" />
+                        {row.bestWpm.toFixed(1)}
+                      </td>
+                      <td className="py-3 pr-4 text-foreground flex items-center gap-1">
+                        <Target className="h-4 w-4 text-emerald-500" />
+                        {row.bestAccuracy.toFixed(1)}%
+                      </td>
+                      <td className="py-3 pr-4 text-foreground">{row.avgWpm.toFixed(1)}</td>
+                      <td className="py-3 text-foreground">{row.runs}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
 
                 {/* Mobile Card View */}
                 <div className="md:hidden space-y-3 p-4">
