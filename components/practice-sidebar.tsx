@@ -71,11 +71,11 @@ export function PracticeSidebar({
   statusLabel,
 }: SidebarProps) {
   return (
-    <aside className="rounded-2xl border border-border/70 bg-card/90 backdrop-blur px-3 py-4 space-y-4 shadow-[0_12px_40px_rgba(0,0,0,0.3)] lg:sticky lg:top-20 lg:min-h-[85vh] lg:flex lg:flex-col lg:justify-between">
-      <div className="space-y-4">
+    <aside className="rounded-xl sm:rounded-2xl border border-border/70 bg-card/90 backdrop-blur px-3 sm:px-4 py-3 sm:py-4 space-y-3 sm:space-y-4 shadow-[0_12px_40px_rgba(0,0,0,0.3)] lg:sticky lg:top-20 lg:min-h-[85vh] lg:flex lg:flex-col lg:justify-between">
+      <div className="space-y-3 sm:space-y-4">
         <div className="flex items-center justify-between">
-          <p className="text-sm font-semibold">Session controls</p>
-          <span className="text-[11px] text-muted-foreground uppercase tracking-[0.14em]">
+          <p className="text-xs sm:text-sm font-semibold">Session controls</p>
+          <span className="text-[10px] sm:text-[11px] text-muted-foreground uppercase tracking-[0.14em] hidden sm:inline">
             Sidebar
           </span>
         </div>
@@ -84,7 +84,7 @@ export function PracticeSidebar({
         value={language}
         onValueChange={(value) => onLanguageChange(value as LanguageName)}
       >
-        <SelectTrigger className="h-10">
+        <SelectTrigger className="h-9 sm:h-10 text-xs sm:text-sm">
           <SelectValue placeholder="Language" />
         </SelectTrigger>
         <SelectContent>
@@ -110,7 +110,7 @@ export function PracticeSidebar({
         value={difficulty}
         onValueChange={(value) => onDifficultyChange(value as Difficulty)}
       >
-        <SelectTrigger className="h-10">
+        <SelectTrigger className="h-9 sm:h-10 text-xs sm:text-sm">
           <SelectValue placeholder="Difficulty" />
         </SelectTrigger>
         <SelectContent>
@@ -121,7 +121,7 @@ export function PracticeSidebar({
       </Select>
 
       <Select value={topic} onValueChange={(value) => onTopicChange(value)}>
-        <SelectTrigger className="h-10">
+        <SelectTrigger className="h-9 sm:h-10 text-xs sm:text-sm">
           <SelectValue placeholder="Topic" />
         </SelectTrigger>
         <SelectContent>
@@ -134,10 +134,10 @@ export function PracticeSidebar({
         </SelectContent>
       </Select>
 
-      <div className="flex items-center gap-2 rounded-full border border-border/60 bg-background/80 px-3 py-1.5 text-xs text-muted-foreground">
-        <Clock3 className="h-4 w-4" />
-        <div className="flex items-center gap-2 w-full">
-          <span>{durationTarget}s</span>
+      <div className="flex items-center gap-2 rounded-full border border-border/60 bg-background/80 px-2 sm:px-3 py-1.5 text-[10px] sm:text-xs text-muted-foreground">
+        <Clock3 className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" />
+        <div className="flex items-center gap-1.5 sm:gap-2 w-full">
+          <span className="min-w-[45px] sm:min-w-[50px]">{durationTarget}s</span>
           <Slider
             className="w-full"
             value={[durationTarget]}
@@ -149,29 +149,29 @@ export function PracticeSidebar({
         </div>
       </div>
 
-        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-          <span className="rounded-full border border-border/70 bg-muted/40 px-2 py-1">
+        <div className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs text-muted-foreground flex-wrap">
+          <span className="rounded-full border border-border/70 bg-muted/40 px-1.5 sm:px-2 py-0.5 sm:py-1">
             {snippetSource === "Sample snippet (add DB snippets to persist results)"
               ? "Sample"
               : "DB"}
           </span>
           {snippetTopic ? (
-            <span className="rounded-full border border-border/70 bg-muted/40 px-2 py-1">
+            <span className="rounded-full border border-border/70 bg-muted/40 px-1.5 sm:px-2 py-0.5 sm:py-1 truncate max-w-[120px] sm:max-w-none">
               {snippetTopic}
             </span>
           ) : null}
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground pt-2 border-t border-border/40 mt-3">
-        <Button size="sm" onClick={onStart} disabled={loadingSnippet}>
+      <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs text-muted-foreground pt-2 border-t border-border/40 mt-2 sm:mt-3">
+        <Button size="sm" onClick={onStart} disabled={loadingSnippet} className="text-xs h-8 sm:h-9 px-2 sm:px-3">
           Start
         </Button>
-        <Button size="sm" variant="secondary" onClick={onReset} disabled={loadingSnippet}>
+        <Button size="sm" variant="secondary" onClick={onReset} disabled={loadingSnippet} className="text-xs h-8 sm:h-9 px-2 sm:px-3">
           Reset
         </Button>
-        <Button size="sm" variant="outline" onClick={onNewSnippet} disabled={loadingSnippet}>
-          <RefreshCw className="mr-2 h-4 w-4" />
+        <Button size="sm" variant="outline" onClick={onNewSnippet} disabled={loadingSnippet} className="text-xs h-8 sm:h-9 px-2 sm:px-3">
+          <RefreshCw className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
           New
         </Button>
         <Button
@@ -179,11 +179,12 @@ export function PracticeSidebar({
           variant="outline"
           onClick={onSave}
           disabled={loadingSnippet || saveDisabled}
+          className="text-xs h-8 sm:h-9 px-2 sm:px-3"
         >
-          <Save className="mr-2 h-4 w-4" />
+          <Save className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
           Save
         </Button>
-        <span className="ml-auto text-[11px] text-muted-foreground">
+        <span className="ml-auto text-[10px] sm:text-[11px] text-muted-foreground hidden sm:inline">
           {statusLabel}
         </span>
       </div>

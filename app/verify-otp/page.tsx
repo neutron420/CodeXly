@@ -136,15 +136,15 @@ function VerifyOtpForm() {
   // --- Main Form Render ---
   return (
       <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>Verify Your Code</CardTitle>
-          <CardDescription>
+        <CardHeader className="px-4 sm:px-6 pt-6 sm:pt-6 pb-4 sm:pb-6">
+          <CardTitle className="text-xl sm:text-2xl">Verify Your Code</CardTitle>
+          <CardDescription className="text-sm">
             Enter the 6-digit code sent to{" "}
-            <span className="font-medium text-foreground">{email || "your email"}</span>.
+            <span className="font-medium text-foreground break-all">{email || "your email"}</span>.
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-4 px-4 sm:px-6 pb-4 sm:pb-6">
             {/* OTP Input */}
             <div className="space-y-2">
               <Label htmlFor="otp">Verification Code (OTP)</Label>
@@ -192,12 +192,12 @@ function VerifyOtpForm() {
             </div>
 
             {/* Error Message Area */}
-            {error && <p id="otp-error" className="text-sm text-red-500 pt-1 text-center">{error}</p>}
+            {error && <p id="otp-error" className="text-xs sm:text-sm text-red-500 pt-1 text-center break-words">{error}</p>}
 
           </CardContent>
-          <CardFooter className="flex flex-col gap-4">
+          <CardFooter className="flex flex-col gap-3 sm:gap-4 px-4 sm:px-6 pb-6 sm:pb-6">
             {/* Submit Button */}
-            <Button type="submit" className="w-full" disabled={isLoading || !turnstileToken}>
+            <Button type="submit" className="w-full h-10 sm:h-11 text-sm" disabled={isLoading || !turnstileToken}>
               {isLoading ? (
                 <>
                   <Icons.spinner className="mr-2 h-4 w-4 animate-spin" /> Verifying...
@@ -207,9 +207,9 @@ function VerifyOtpForm() {
               )}
             </Button>
             {/* Link to request new code */}
-            <p className="text-sm text-center text-muted-foreground">
+            <p className="text-xs sm:text-sm text-center text-muted-foreground">
               Didn&apos;t receive a code?{" "}
-              <Link href={`/forgot-password?email=${encodeURIComponent(email)}`} className="underline hover:text-primary"> {/* Pass email back */}
+              <Link href={`/forgot-password?email=${encodeURIComponent(email)}`} className="underline hover:text-primary">
                 Request a new one
               </Link>
             </p>
@@ -223,8 +223,8 @@ function VerifyOtpForm() {
 // --- Main Page Component (Wrapper with Suspense) ---
 export default function VerifyOtpPage() {
     return (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-background text-muted-foreground">Loading...</div>}>
-            <div className="min-h-screen flex items-center justify-center bg-background px-4">
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-background text-muted-foreground px-4 sm:px-6 py-8 sm:py-12">Loading...</div>}>
+            <div className="min-h-screen flex items-center justify-center bg-background px-4 sm:px-6 py-8 sm:py-12">
                 <VerifyOtpForm />
             </div>
         </Suspense>

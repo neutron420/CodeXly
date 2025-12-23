@@ -38,37 +38,38 @@ export default async function PracticeResultPage({ searchParams }: ResultPagePro
     <div className="min-h-screen bg-background text-foreground">
       <Header1 />
 
-      <main className="container mx-auto px-4 pb-10 pt-20 space-y-6">
-        <div className="flex items-center justify-between gap-3">
+      <main className="container mx-auto px-4 sm:px-6 pb-8 sm:pb-10 pt-16 sm:pt-20 space-y-4 sm:space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div>
-            <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
+            <p className="text-[10px] sm:text-xs uppercase tracking-[0.18em] text-muted-foreground">
               Practice summary
             </p>
-            <h1 className="text-2xl font-semibold">Session results</h1>
-            <p className="text-sm text-muted-foreground">
+            <h1 className="text-xl sm:text-2xl font-semibold">Session results</h1>
+            <p className="text-xs sm:text-sm text-muted-foreground">
               Language: {language} • Duration: {duration}s • Characters: {chars}
             </p>
           </div>
           <Link
             href="/practice"
-            className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground transition"
+            className="inline-flex items-center gap-2 rounded-lg border border-border px-2.5 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm hover:bg-accent hover:text-accent-foreground transition"
           >
-            <ArrowLeft className="h-4 w-4" />
-            Back to practice
+            <ArrowLeft className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+            <span className="hidden sm:inline">Back to practice</span>
+            <span className="sm:hidden">Back</span>
           </Link>
         </div>
 
-        <div className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
-          <div className="rounded-2xl border border-border/70 bg-card/95 backdrop-blur px-4 py-4 shadow-[0_14px_32px_rgba(0,0,0,0.28)]">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-sm font-semibold text-muted-foreground">
+        <div className="grid gap-4 sm:gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+          <div className="rounded-xl sm:rounded-2xl border border-border/70 bg-card/95 backdrop-blur px-3 sm:px-4 py-3 sm:py-4 shadow-[0_14px_32px_rgba(0,0,0,0.28)]">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0 mb-3 sm:mb-4">
+              <h2 className="text-xs sm:text-sm font-semibold text-muted-foreground">
                 Performance graph
               </h2>
-              <span className="text-xs text-muted-foreground">
+              <span className="text-[10px] sm:text-xs text-muted-foreground">
                 WPM trend (synthetic preview)
               </span>
             </div>
-            <div className="h-[220px] rounded-xl border border-border/60 bg-background/60 px-3 py-3">
+            <div className="h-[180px] sm:h-[220px] rounded-lg sm:rounded-xl border border-border/60 bg-background/60 px-2 sm:px-3 py-2 sm:py-3">
               <svg viewBox="0 0 100 100" className="h-full w-full" preserveAspectRatio="none">
                 {/* soft background */}
                 <rect
@@ -132,21 +133,21 @@ export default async function PracticeResultPage({ searchParams }: ResultPagePro
             </div>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
+          <div className="grid gap-3 grid-cols-1 sm:grid-cols-3 lg:grid-cols-1">
             <ResultCard
-              icon={<Gauge className="h-5 w-5" />}
+              icon={<Gauge className="h-4 w-4 sm:h-5 sm:w-5" />}
               label="WPM"
               value={`${wpm.toFixed(1)}`}
               hint="Words per minute"
             />
             <ResultCard
-              icon={<Target className="h-5 w-5" />}
+              icon={<Target className="h-4 w-4 sm:h-5 sm:w-5" />}
               label="Accuracy"
               value={`${accuracy.toFixed(1)}%`}
               hint="Correctness of typed chars"
             />
             <ResultCard
-              icon={<Timer className="h-5 w-5" />}
+              icon={<Timer className="h-4 w-4 sm:h-5 sm:w-5" />}
               label="Time"
               value={`${duration}s`}
               hint="Session duration"
@@ -160,13 +161,13 @@ export default async function PracticeResultPage({ searchParams }: ResultPagePro
 
 function ResultCard(props: { icon: React.ReactNode; label: string; value: string; hint?: string }) {
   return (
-    <div className="rounded-xl border border-border/70 bg-card/95 backdrop-blur p-4 space-y-2 shadow-[0_10px_24px_rgba(0,0,0,0.2)]">
-      <div className="flex items-center gap-2 text-muted-foreground text-sm">
+    <div className="rounded-lg sm:rounded-xl border border-border/70 bg-card/95 backdrop-blur p-3 sm:p-4 space-y-1.5 sm:space-y-2 shadow-[0_10px_24px_rgba(0,0,0,0.2)]">
+      <div className="flex items-center gap-2 text-muted-foreground text-xs sm:text-sm">
         {props.icon}
         <span>{props.label}</span>
       </div>
-      <div className="text-2xl font-semibold text-foreground">{props.value}</div>
-      {props.hint && <p className="text-xs text-muted-foreground leading-snug">{props.hint}</p>}
+      <div className="text-xl sm:text-2xl font-semibold text-foreground">{props.value}</div>
+      {props.hint && <p className="text-[10px] sm:text-xs text-muted-foreground leading-snug">{props.hint}</p>}
     </div>
   );
 }

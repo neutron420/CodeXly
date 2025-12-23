@@ -82,14 +82,14 @@ function SetNewPasswordForm() {
 
   return (
       <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>Set New Password</CardTitle>
-          <CardDescription>
-            Enter a new password for your account associated with <span className="font-medium text-foreground">{email}</span>
+        <CardHeader className="px-4 sm:px-6 pt-6 sm:pt-6 pb-4 sm:pb-6">
+          <CardTitle className="text-xl sm:text-2xl">Set New Password</CardTitle>
+          <CardDescription className="text-sm">
+            Enter a new password for your account associated with <span className="font-medium text-foreground break-all">{email}</span>
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-4 px-4 sm:px-6 pb-4 sm:pb-6">
             <div className="space-y-2">
               <Label htmlFor="newPassword">New Password</Label>
               <Input
@@ -115,12 +115,12 @@ function SetNewPasswordForm() {
               />
             </div>
 
-            {message && <p className="text-sm text-green-600 dark:text-green-400">{message}</p>}
-            {error && <p className="text-sm text-red-500">{error}</p>}
+            {message && <p className="text-xs sm:text-sm text-green-600 dark:text-green-400 break-words">{message}</p>}
+            {error && <p className="text-xs sm:text-sm text-red-500 break-words">{error}</p>}
 
           </CardContent>
-          <CardFooter className="flex flex-col gap-4">
-            <Button type="submit" className="w-full" disabled={isLoading || !!message}>
+          <CardFooter className="flex flex-col gap-3 sm:gap-4 px-4 sm:px-6 pb-6 sm:pb-6">
+            <Button type="submit" className="w-full h-10 sm:h-11 text-sm" disabled={isLoading || !!message}>
               {isLoading ? (
                 <>
                   <Icons.spinner className="mr-2 h-4 w-4 animate-spin" /> Resetting...
@@ -129,8 +129,8 @@ function SetNewPasswordForm() {
                 "Reset Password"
               )}
             </Button>
-            {message && ( // Show sign-in link only after success
-                <p className="text-sm text-center text-muted-foreground">
+            {message && (
+                <p className="text-xs sm:text-sm text-center text-muted-foreground">
                     <Link href="/signin" className="underline hover:text-primary">
                         Go to Sign In
                     </Link>
@@ -145,8 +145,8 @@ function SetNewPasswordForm() {
 export default function SetNewPasswordPage() {
     // Wrap with Suspense because useSearchParams() needs it
     return (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-background">Loading...</div>}>
-            <div className="min-h-screen flex items-center justify-center bg-background px-4">
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-background px-4 sm:px-6 py-8 sm:py-12">Loading...</div>}>
+            <div className="min-h-screen flex items-center justify-center bg-background px-4 sm:px-6 py-8 sm:py-12">
                 <SetNewPasswordForm />
             </div>
         </Suspense>

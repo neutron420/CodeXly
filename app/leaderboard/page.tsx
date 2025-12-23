@@ -83,73 +83,129 @@ export default async function LeaderboardPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Header1 />
-      <main className="container mx-auto px-4 pb-16 pt-24 space-y-8">
+      <main className="container mx-auto px-4 sm:px-6 pb-8 sm:pb-16 pt-20 sm:pt-24 space-y-6 sm:space-y-8">
         <div className="flex items-center justify-between gap-3">
           <div>
-            <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Leaderboard</p>
-            <h1 className="text-2xl font-semibold">Top practice performers</h1>
-            <p className="text-sm text-muted-foreground">Ranked by best recorded WPM from saved results.</p>
+            <p className="text-[10px] sm:text-xs uppercase tracking-[0.18em] text-muted-foreground">Leaderboard</p>
+            <h1 className="text-xl sm:text-2xl font-semibold">Top practice performers</h1>
+            <p className="text-xs sm:text-sm text-muted-foreground">Ranked by best recorded WPM from saved results.</p>
           </div>
-          <Trophy className="h-8 w-8 text-amber-400" />
+          <Trophy className="h-6 w-6 sm:h-8 sm:w-8 text-amber-400 flex-shrink-0" />
         </div>
 
         <Card className="border border-border/70 shadow-sm">
-          <CardHeader>
-            <CardTitle>Global ranking</CardTitle>
-            <CardDescription>
+          <CardHeader className="p-4 sm:p-6">
+            <CardTitle className="text-base sm:text-lg">Global ranking</CardTitle>
+            <CardDescription className="text-xs sm:text-sm">
               All registered users. Those without saved practice runs show 0 statistics.
             </CardDescription>
           </CardHeader>
-          <CardContent className="overflow-x-auto">
+          <CardContent className="overflow-x-auto p-0 sm:p-6">
             {rows.length === 0 ? (
-              <div className="py-12 text-center text-muted-foreground">No results yet.</div>
+              <div className="py-8 sm:py-12 text-center text-muted-foreground text-sm">No results yet.</div>
             ) : (
-              <table className="w-full text-sm">
-                <thead className="text-left text-muted-foreground">
-                  <tr className="border-b border-border/60">
-                    <th className="py-2 pr-4">Rank</th>
-                    <th className="py-2 pr-4">User</th>
-                    <th className="py-2 pr-4">Best WPM</th>
-                    <th className="py-2 pr-4">Best Accuracy</th>
-                    <th className="py-2 pr-4">Avg WPM</th>
-                    <th className="py-2">Runs</th>
-                  </tr>
-                </thead>
-                <tbody>
+              <>
+                {/* Desktop Table View */}
+                <table className="hidden md:table w-full text-sm">
+                  <thead className="text-left text-muted-foreground">
+                    <tr className="border-b border-border/60">
+                      <th className="py-2 pr-4">Rank</th>
+                      <th className="py-2 pr-4">User</th>
+                      <th className="py-2 pr-4">Best WPM</th>
+                      <th className="py-2 pr-4">Best Accuracy</th>
+                      <th className="py-2 pr-4">Avg WPM</th>
+                      <th className="py-2">Runs</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {rows.map((row, idx) => (
+                      <tr
+                        key={row.userId}
+                        className="border-b border-border/40 last:border-0 hover:bg-muted/20 transition"
+                      >
+                        <td className="py-3 pr-4 font-semibold text-muted-foreground">#{idx + 1}</td>
+                        <td className="py-3 pr-4">
+                          <div className="flex items-center gap-3">
+                            <Avatar className="h-9 w-9">
+                              <AvatarImage src={row.image ?? undefined} alt={row.name} />
+                              <AvatarFallback>{getInitials(row.name)}</AvatarFallback>
+                            </Avatar>
+                            <div className="flex flex-col">
+                              <span className="font-medium text-foreground">{row.name}</span>
+                              {row.email ? (
+                                <span className="text-xs text-muted-foreground">{row.email}</span>
+                              ) : null}
+                            </div>
+                          </div>
+                        </td>
+                        <td className="py-3 pr-4 font-semibold text-foreground flex items-center gap-1">
+                          <Gauge className="h-4 w-4 text-primary" />
+                          {row.bestWpm.toFixed(1)}
+                        </td>
+                        <td className="py-3 pr-4 text-foreground flex items-center gap-1">
+                          <Target className="h-4 w-4 text-emerald-500" />
+                          {row.bestAccuracy.toFixed(1)}%
+                        </td>
+                        <td className="py-3 pr-4 text-foreground">{row.avgWpm.toFixed(1)}</td>
+                        <td className="py-3 text-foreground">{row.runs}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+
+                {/* Mobile Card View */}
+                <div className="md:hidden space-y-3 p-4">
                   {rows.map((row, idx) => (
-                    <tr
-                      key={row.userId}
-                      className="border-b border-border/40 last:border-0 hover:bg-muted/20 transition"
-                    >
-                      <td className="py-3 pr-4 font-semibold text-muted-foreground">#{idx + 1}</td>
-                      <td className="py-3 pr-4">
-                        <div className="flex items-center gap-3">
-                          <Avatar className="h-9 w-9">
-                            <AvatarImage src={row.image ?? undefined} alt={row.name} />
-                            <AvatarFallback>{getInitials(row.name)}</AvatarFallback>
-                          </Avatar>
-                          <div className="flex flex-col">
-                            <span className="font-medium text-foreground">{row.name}</span>
-                            {row.email ? (
-                              <span className="text-xs text-muted-foreground">{row.email}</span>
-                            ) : null}
+                    <Card key={row.userId} className="border border-border/40">
+                      <CardContent className="p-4 space-y-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <span className="text-sm font-semibold text-muted-foreground">#{idx + 1}</span>
+                            <Avatar className="h-10 w-10">
+                              <AvatarImage src={row.image ?? undefined} alt={row.name} />
+                              <AvatarFallback>{getInitials(row.name)}</AvatarFallback>
+                            </Avatar>
+                            <div className="flex flex-col">
+                              <span className="font-medium text-foreground text-sm">{row.name}</span>
+                              {row.email ? (
+                                <span className="text-xs text-muted-foreground truncate max-w-[180px]">{row.email}</span>
+                              ) : null}
+                            </div>
                           </div>
                         </div>
-                      </td>
-                      <td className="py-3 pr-4 font-semibold text-foreground flex items-center gap-1">
-                        <Gauge className="h-4 w-4 text-primary" />
-                        {row.bestWpm.toFixed(1)}
-                      </td>
-                      <td className="py-3 pr-4 text-foreground flex items-center gap-1">
-                        <Target className="h-4 w-4 text-emerald-500" />
-                        {row.bestAccuracy.toFixed(1)}%
-                      </td>
-                      <td className="py-3 pr-4 text-foreground">{row.avgWpm.toFixed(1)}</td>
-                      <td className="py-3 text-foreground">{row.runs}</td>
-                    </tr>
+                        <div className="grid grid-cols-2 gap-3 pt-2 border-t border-border/40">
+                          <div className="flex items-center gap-2">
+                            <Gauge className="h-4 w-4 text-primary" />
+                            <div className="flex flex-col">
+                              <span className="text-xs text-muted-foreground">Best WPM</span>
+                              <span className="font-semibold text-foreground">{row.bestWpm.toFixed(1)}</span>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Target className="h-4 w-4 text-emerald-500" />
+                            <div className="flex flex-col">
+                              <span className="text-xs text-muted-foreground">Accuracy</span>
+                              <span className="font-semibold text-foreground">{row.bestAccuracy.toFixed(1)}%</span>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <div className="flex flex-col">
+                              <span className="text-xs text-muted-foreground">Avg WPM</span>
+                              <span className="font-semibold text-foreground">{row.avgWpm.toFixed(1)}</span>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <div className="flex flex-col">
+                              <span className="text-xs text-muted-foreground">Runs</span>
+                              <span className="font-semibold text-foreground">{row.runs}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
                   ))}
-                </tbody>
-              </table>
+                </div>
+              </>
             )}
           </CardContent>
         </Card>
