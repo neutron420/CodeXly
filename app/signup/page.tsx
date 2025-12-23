@@ -1,9 +1,9 @@
 // app/signup/page.tsx
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react"; // Import signIn to log user in after signup
+import { signIn, useSession } from "next-auth/react"; // Import signIn to log user in after signup
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,12 +11,20 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import Link from "next/link";
 
 export default function SignUpPage() {
+  const { status } = useSession();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+
+  // If already authenticated, redirect away from sign-up page
+  useEffect(() => {
+    if (status === "authenticated") {
+      router.replace("/");
+    }
+  }, [status, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -64,14 +72,14 @@ export default function SignUpPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background px-4">
+    <div className="min-h-screen flex items-center justify-center bg-background px-4 sm:px-6 py-8 sm:py-12">
       <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>Sign Up</CardTitle>
-          <CardDescription>Create your CodeXly account.</CardDescription>
+        <CardHeader className="px-4 sm:px-6 pt-6 sm:pt-6 pb-4 sm:pb-6">
+          <CardTitle className="text-xl sm:text-2xl">Sign Up</CardTitle>
+          <CardDescription className="text-sm">Create your CodeXly account.</CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-4 px-4 sm:px-6 pb-4 sm:pb-6">
              <div className="space-y-2">
               <Label htmlFor="name">Name</Label>
               <Input
@@ -108,13 +116,13 @@ export default function SignUpPage() {
                 disabled={isLoading}
               />
             </div>
-            {error && <p className="text-sm text-red-500">{error}</p>}
+            {error && <p className="text-xs sm:text-sm text-red-500 break-words">{error}</p>}
           </CardContent>
-          <CardFooter className="flex flex-col gap-4">
-            <Button type="submit" className="w-full" disabled={isLoading}>
+          <CardFooter className="flex flex-col gap-3 sm:gap-4 px-4 sm:px-6 pb-6 sm:pb-6">
+            <Button type="submit" className="w-full h-10 sm:h-11 text-sm" disabled={isLoading}>
               {isLoading ? "Creating Account..." : "Sign Up"}
             </Button>
-             <p className="text-sm text-center text-muted-foreground">
+             <p className="text-xs sm:text-sm text-center text-muted-foreground">
                Already have an account?{" "}
                <Link href="/signin" className="underline hover:text-primary">
                  Sign In

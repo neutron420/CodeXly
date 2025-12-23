@@ -91,33 +91,31 @@ export default async function ProfilePage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Header1 />
-      <div className="container mx-auto px-4 pt-28 pb-16">
+      <div className="container mx-auto px-4 sm:px-6 pt-20 sm:pt-28 pb-8 sm:pb-16">
 
         {/* Profile Header Card */}
-        <Card className="mb-8 overflow-hidden border border-border shadow-sm">
-          <CardHeader className="flex flex-row items-center space-x-6 p-6 bg-card"> {/* Row layout */}
-            <Avatar className="h-20 w-20 border-2 border-primary">
+        <Card className="mb-6 sm:mb-8 overflow-hidden border border-border shadow-sm">
+          <CardHeader className="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6 p-4 sm:p-6 bg-card">
+            <Avatar className="h-16 w-16 sm:h-20 sm:w-20 border-2 border-primary flex-shrink-0">
               <AvatarImage src={user.image ?? undefined} alt={user.name ?? 'User'} />
-              <AvatarFallback className="text-2xl bg-primary/80 text-primary-foreground">
+              <AvatarFallback className="text-xl sm:text-2xl bg-primary/80 text-primary-foreground">
                 {getInitials(user.name)}
               </AvatarFallback>
             </Avatar>
-            <div className="flex flex-col">
-                <CardTitle className="text-2xl">{user.name ?? 'User Profile'}</CardTitle>
-                <CardDescription>{user.email}</CardDescription>
-                {/* Optional: Add member since date */}
-                {/* <CardDescription className="text-xs mt-1">Member since {new Date(user.createdAt).toLocaleDateString()}</CardDescription> */}
+            <div className="flex flex-col text-center sm:text-left w-full sm:w-auto">
+                <CardTitle className="text-xl sm:text-2xl">{user.name ?? 'User Profile'}</CardTitle>
+                <CardDescription className="text-sm break-all sm:break-normal">{user.email}</CardDescription>
             </div>
           </CardHeader>
         </Card>
 
-        <Card className="mb-8 border border-border/70 shadow-sm">
-          <CardHeader className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <Card className="mb-6 sm:mb-8 border border-border/70 shadow-sm">
+          <CardHeader className="flex flex-col gap-3 sm:gap-2 sm:flex-row sm:items-center sm:justify-between p-4 sm:p-6">
             <div>
-              <CardTitle className="text-lg">Practice streak heatmap</CardTitle>
-              <CardDescription>Daily saved results across the last 52 weeks.</CardDescription>
+              <CardTitle className="text-base sm:text-lg">Practice streak heatmap</CardTitle>
+              <CardDescription className="text-xs sm:text-sm">Daily saved results across the last 52 weeks.</CardDescription>
             </div>
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs text-muted-foreground">
               <span className="flex items-center gap-1">
                 <span className="inline-block h-3 w-3 rounded-sm bg-[rgb(31,41,55)] border border-border/50" />
                 None
@@ -140,22 +138,22 @@ export default async function ProfilePage() {
               </span>
             </div>
           </CardHeader>
-          <CardContent className="overflow-x-auto">
+          <CardContent className="overflow-x-auto px-4 sm:px-6 pb-4 sm:pb-6">
             {contributions.weeks.length === 0 ? (
-              <p className="py-10 text-sm text-muted-foreground text-center">
+              <p className="py-8 sm:py-10 text-xs sm:text-sm text-muted-foreground text-center">
                 No saved practice yet. Complete a run and hit <span className="font-semibold">Save</span> to start filling this grid.
               </p>
             ) : (
               <>
-                <div className="ml-8 mb-2 flex gap-[3px] text-[10px] text-muted-foreground">
+                <div className="ml-6 sm:ml-8 mb-2 flex gap-[2px] sm:gap-[3px] text-[9px] sm:text-[10px] text-muted-foreground">
                   {contributions.monthLabels.map((label, idx) => (
-                    <span key={idx} className="w-3.5 text-center">
+                    <span key={idx} className="w-3 sm:w-3.5 text-center">
                       {label ?? ""}
                     </span>
                   ))}
                 </div>
-                <div className="flex gap-[3px]">
-                  <div className="mr-2 flex flex-col justify-between py-1 text-[10px] text-muted-foreground">
+                <div className="flex gap-[2px] sm:gap-[3px]">
+                  <div className="mr-1.5 sm:mr-2 flex flex-col justify-between py-1 text-[9px] sm:text-[10px] text-muted-foreground">
                     <span>Mon</span>
                     <span>Wed</span>
                     <span>Fri</span>
@@ -165,7 +163,7 @@ export default async function ProfilePage() {
                       {week.map((day) => (
                         <div
                           key={day.date}
-                          className={`h-3.5 w-3.5 rounded-[3px] border border-border/40 ${contributionClass(day.count)}`}
+                          className={`h-3 w-3 sm:h-3.5 sm:w-3.5 rounded-[2px] sm:rounded-[3px] border border-border/40 ${contributionClass(day.count)}`}
                           title={`${day.dateLabel}: ${day.count} session${day.count === 1 ? "" : "s"}`}
                         />
                       ))}
@@ -182,15 +180,15 @@ export default async function ProfilePage() {
 
         {/* Tabs for Profile Sections */}
         <Tabs defaultValue="stats" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 mb-6">
-            <TabsTrigger value="stats">
-                <Activity className="w-4 h-4 mr-2" /> Language Stats
+          <TabsList className="grid w-full grid-cols-3 mb-4 sm:mb-6 h-auto">
+            <TabsTrigger value="stats" className="text-xs sm:text-sm py-2 sm:py-3">
+                <Activity className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" /> <span className="hidden sm:inline">Language </span>Stats
             </TabsTrigger>
-            <TabsTrigger value="profile">
-                 <UserIcon className="w-4 h-4 mr-2" /> Profile Details
+            <TabsTrigger value="profile" className="text-xs sm:text-sm py-2 sm:py-3">
+                 <UserIcon className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" /> <span className="hidden sm:inline">Profile </span>Details
             </TabsTrigger>
-            <TabsTrigger value="account">
-                <Settings className="w-4 h-4 mr-2" /> Account
+            <TabsTrigger value="account" className="text-xs sm:text-sm py-2 sm:py-3">
+                <Settings className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" /> Account
             </TabsTrigger>
           </TabsList>
 
@@ -203,41 +201,40 @@ export default async function ProfilePage() {
               </CardHeader>
               <CardContent>
                 {languageStats.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6"> {/* Adjusted gap */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                     {languageStats.map((stat) => (
-                      <Card key={stat.id} className="flex flex-col border border-border/50"> {/* Subtle border for stat cards */}
-                        <CardHeader className="pb-3"> {/* Reduced padding */}
-                          <CardTitle className="text-lg">{formatLanguageName(stat.languageName)}</CardTitle> {/* Uses updated function */}
+                      <Card key={stat.id} className="flex flex-col border border-border/50">
+                        <CardHeader className="pb-2 sm:pb-3 p-4 sm:p-6">
+                          <CardTitle className="text-base sm:text-lg">{formatLanguageName(stat.languageName)}</CardTitle>
                           {/* <CardDescription>Last Practiced: {new Date(stat.updatedAt).toLocaleDateString()}</CardDescription> */}
                         </CardHeader>
-                        <CardContent className="flex-grow space-y-4 pt-0"> {/* Reduced padding top */}
+                        <CardContent className="flex-grow space-y-3 sm:space-y-4 pt-0 px-4 sm:px-6 pb-4 sm:pb-6">
                            <div className="space-y-1">
-                                <div className="flex items-center justify-between text-sm text-muted-foreground">
-                                    <span className="flex items-center"><Zap className="w-4 h-4 mr-1.5"/> Average WPM</span>
-                                    <span className="font-semibold text-foreground">{stat.averageWpm.toFixed(1)}</span>
+                                <div className="flex items-center justify-between text-xs sm:text-sm text-muted-foreground">
+                                    <span className="flex items-center"><Zap className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-1.5"/> Average WPM</span>
+                                    <span className="font-semibold text-foreground text-xs sm:text-sm">{stat.averageWpm.toFixed(1)}</span>
                                 </div>
-                                {/* Progress bar for WPM could be added here if you have a target/max WPM */}
                            </div>
 
                            <div className="space-y-1">
-                               <div className="flex items-center justify-between text-sm text-muted-foreground mb-1">
-                                    <span className="flex items-center"><Percent className="w-4 h-4 mr-1.5"/> Average Accuracy</span>
-                                    <span className="font-semibold text-foreground">{stat.averageAccuracy.toFixed(1)}%</span>
+                               <div className="flex items-center justify-between text-xs sm:text-sm text-muted-foreground mb-1">
+                                    <span className="flex items-center"><Percent className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-1.5"/> Average Accuracy</span>
+                                    <span className="font-semibold text-foreground text-xs sm:text-sm">{stat.averageAccuracy.toFixed(1)}%</span>
                                </div>
-                               <Progress value={stat.averageAccuracy} className="h-2" />
+                               <Progress value={stat.averageAccuracy} className="h-1.5 sm:h-2" />
                            </div>
 
-                           <div className="flex items-center justify-between text-sm">
-                                <span className="flex items-center text-muted-foreground"><BarChart className="w-4 h-4 mr-1.5"/> Snippets Done</span>
+                           <div className="flex items-center justify-between text-xs sm:text-sm">
+                                <span className="flex items-center text-muted-foreground"><BarChart className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-1.5"/> Snippets Done</span>
                                 <span className="font-medium text-foreground">{stat.snippetsCompleted}</span>
                            </div>
-                           <div className="flex items-center justify-between text-sm">
-                                <span className="flex items-center text-muted-foreground"><Zap className="w-4 h-4 mr-1.5 text-amber-500"/> Best WPM</span>
+                           <div className="flex items-center justify-between text-xs sm:text-sm">
+                                <span className="flex items-center text-muted-foreground"><Zap className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-1.5 text-amber-500"/> Best WPM</span>
                                 <span className="font-medium text-amber-500">{stat.bestWpm.toFixed(1)}</span>
                            </div>
-                             <div className="flex items-center justify-between text-sm pt-2 border-t border-border/50">
-                                <span className="flex items-center text-muted-foreground text-xs"><Clock className="w-3 h-3 mr-1.5"/> Last Practice</span>
-                                <span className="font-medium text-foreground text-xs">{new Date(stat.updatedAt).toLocaleDateString()}</span>
+                             <div className="flex items-center justify-between text-xs sm:text-sm pt-2 border-t border-border/50">
+                                <span className="flex items-center text-muted-foreground"><Clock className="w-3 h-3 mr-1 sm:mr-1.5"/> Last Practice</span>
+                                <span className="font-medium text-foreground">{new Date(stat.updatedAt).toLocaleDateString()}</span>
                            </div>
                         </CardContent>
                       </Card>

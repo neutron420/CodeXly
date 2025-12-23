@@ -294,8 +294,8 @@ export default function PracticePage() {
     <div className="min-h-screen bg-background text-foreground">
       <Header1 />
 
-      <main className="container mx-auto px-4 pb-6 pt-20">
-        <section className="grid gap-4 lg:grid-cols-[340px_minmax(0,1fr)] items-start">
+      <main className="container mx-auto px-3 sm:px-4 pb-4 sm:pb-6 pt-16 sm:pt-20">
+        <section className="grid gap-3 sm:gap-4 lg:grid-cols-[340px_minmax(0,1fr)] items-start">
           <PracticeSidebar
             languages={LANGUAGES}
             premiumLanguages={PREMIUM_LANGUAGES}
@@ -331,37 +331,37 @@ export default function PracticePage() {
           />
 
           {/* RIGHT MAIN AREA */}
-          <div className="space-y-4">
-            <div className="rounded-2xl border border-border/70 bg-card/95 backdrop-blur px-4 md:px-5 py-4 shadow-[0_14px_32px_rgba(0,0,0,0.3)]">
-              <div className="mb-2.5 flex items-center justify-between gap-3">
-                <p className="text-xs md:text-sm text-muted-foreground flex items-center gap-2">
+          <div className="space-y-3 sm:space-y-4">
+            <div className="rounded-xl sm:rounded-2xl border border-border/70 bg-card/95 backdrop-blur px-3 sm:px-4 md:px-5 py-3 sm:py-4 shadow-[0_14px_32px_rgba(0,0,0,0.3)]">
+              <div className="mb-2 sm:mb-2.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-3">
+                <p className="text-[10px] sm:text-xs md:text-sm text-muted-foreground flex flex-wrap items-center gap-1.5 sm:gap-2">
                   <span>{formatLanguage(language)}</span>
-                  <span>•</span>
+                  <span className="hidden sm:inline">•</span>
                   <span className="capitalize">{difficulty.toLowerCase()}</span>
                   {snippet?.topicName ? (
                     <>
-                      <span>•</span>
-                      <span>{snippet.topicName}</span>
+                      <span className="hidden sm:inline">•</span>
+                      <span className="truncate max-w-[100px] sm:max-w-none">{snippet.topicName}</span>
                     </>
                   ) : null}
                   {snippet?.isSample ? (
                     <>
-                      <span>•</span>
-                      <span className="text-[11px] rounded-full border border-border/60 px-2 py-0.5">
+                      <span className="hidden sm:inline">•</span>
+                      <span className="text-[10px] sm:text-[11px] rounded-full border border-border/60 px-1.5 sm:px-2 py-0.5">
                         Sample
                       </span>
                     </>
                   ) : null}
                 </p>
-                <div className="flex items-center gap-1.5 text-[11px] md:text-xs text-muted-foreground">
-                  <Timer className="h-3.5 w-3.5" />
+                <div className="flex items-center gap-1.5 text-[10px] sm:text-[11px] md:text-xs text-muted-foreground">
+                  <Timer className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                   <span>
                     {elapsedSeconds}s / {durationTarget}s
                   </span>
                 </div>
               </div>
 
-              <div className="relative h-[460px] md:h-[520px] rounded-xl border border-border/70 bg-background px-4 py-4 font-mono text-sm md:text-base leading-relaxed overflow-y-auto">
+              <div className="relative h-[400px] sm:h-[460px] md:h-[520px] rounded-lg sm:rounded-xl border border-border/70 bg-background px-3 sm:px-4 py-3 sm:py-4 font-mono text-xs sm:text-sm md:text-base leading-relaxed overflow-y-auto">
                 {loadingSnippet ? (
                   <span className="text-muted-foreground">Loading snippet...</span>
                 ) : (
@@ -392,20 +392,20 @@ export default function PracticePage() {
             {/* Stats section hidden to keep the coding area focused and spacious */}
 
             {saveMessage && (
-              <div className="flex items-start gap-2 rounded-lg border border-border/70 bg-muted/40 px-4 py-3 text-sm">
+              <div className="flex items-start gap-2 rounded-lg border border-border/70 bg-muted/40 px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm">
                 {saveMessage.toLowerCase().includes("saved") ? (
-                  <CheckCircle2 className="mt-0.5 h-5 w-5 text-emerald-500 flex-shrink-0" />
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 sm:h-5 sm:w-5 text-emerald-500 flex-shrink-0" />
                 ) : (
-                  <AlertCircle className="mt-0.5 h-5 w-5 text-amber-500 flex-shrink-0" />
+                  <AlertCircle className="mt-0.5 h-4 w-4 sm:h-5 sm:w-5 text-amber-500 flex-shrink-0" />
                 )}
-                <span>{saveMessage}</span>
+                <span className="break-words">{saveMessage}</span>
               </div>
             )}
 
             {snippetError && (
-              <div className="flex items-start gap-2 rounded-lg border border-destructive/50 bg-destructive/10 px-4 py-3 text-sm text-destructive">
-                <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0" />
-                <span>{snippetError}</span>
+              <div className="flex items-start gap-2 rounded-lg border border-destructive/50 bg-destructive/10 px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm text-destructive">
+                <AlertCircle className="mt-0.5 h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
+                <span className="break-words">{snippetError}</span>
               </div>
             )}
           </div>

@@ -1,9 +1,9 @@
 // app/signin/page.tsx
 "use client";
 
-import { useState } from "react";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
+import { signIn, useSession } from "next-auth/react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,13 +11,24 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import Link from "next/link";
 import { Icons } from "@/components/ui/icons"; // Assuming you have icons component
 
-export default function SignInPage() {
+function SignInForm() {
+  const { status } = useSession();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const callbackUrl = searchParams.get("callbackUrl") || "/";
+
+  // If already authenticated, don't show the sign-in form
+  useEffect(() => {
+    if (status === "authenticated") {
+      router.replace(callbackUrl);
+    }
+  }, [status, router, callbackUrl]);
 
   const handleCredentialsSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,7 +46,7 @@ export default function SignInPage() {
         setError("Invalid email or password. Please try again.");
         console.error("Credentials Sign-in error:", result.error);
       } else if (result?.ok) {
-        router.push("/");
+        router.push(callbackUrl);
         router.refresh();
       } else {
         setError("An unexpected error occurred. Please try again.");
@@ -53,7 +64,7 @@ export default function SignInPage() {
       setError(null); // Clear previous errors
       try {
           // Redirects the user to Google, then back to callbackUrl on success
-          await signIn("google", { callbackUrl: "/" });
+          await signIn("google", { callbackUrl });
           // Note: Code execution stops here on successful redirect
       } catch (err) {
           console.error("Google Sign-in error:", err);
@@ -64,26 +75,26 @@ export default function SignInPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background px-4">
+    <div className="min-h-screen flex items-center justify-center bg-background px-4 sm:px-6 py-8 sm:py-12">
       <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>Sign In</CardTitle>
-          <CardDescription>Enter your credentials or use a provider.</CardDescription>
+        <CardHeader className="px-4 sm:px-6 pt-6 sm:pt-6 pb-4 sm:pb-6">
+          <CardTitle className="text-xl sm:text-2xl">Sign In</CardTitle>
+          <CardDescription className="text-sm">Enter your credentials or use a provider.</CardDescription>
         </CardHeader>
 
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-4 px-4 sm:px-6 pb-4 sm:pb-6">
             {/* --- GOOGLE BUTTON --- */}
             <Button
               variant="outline"
-              className="w-full"
+              className="w-full h-10 sm:h-11 text-sm"
               onClick={handleGoogleSignIn}
               disabled={isLoading || isGoogleLoading}
             >
               {isGoogleLoading ? (
                   <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
               ) : (
-                  <Icons.google className="mr-2 h-4 w-4" /> // Ensure Icons.google exists
-              )}{" "}
+                  <Icons.google className="mr-2 h-4 w-4" />
+              )}
               Continue with Google
             </Button>
 
@@ -124,21 +135,21 @@ export default function SignInPage() {
                 disabled={isLoading || isGoogleLoading}
               />
             </div>
-            {error && <p className="text-sm text-red-500 pt-2">{error}</p>} {/* Added padding */}
+            {error && <p className="text-xs sm:text-sm text-red-500 pt-1 sm:pt-2 break-words">{error}</p>}
 
-            <Button type="submit" className="w-full" disabled={isLoading || isGoogleLoading}>
+            <Button type="submit" className="w-full h-10 sm:h-11 text-sm" disabled={isLoading || isGoogleLoading}>
               {isLoading ? "Signing In..." : "Sign In with Email"}
             </Button>
           </form>
         </CardContent>
 
-        <CardFooter className="flex flex-col gap-4">
-          <p className="text-sm text-center text-muted-foreground">
+        <CardFooter className="flex flex-col gap-3 sm:gap-4 px-4 sm:px-6 pb-6 sm:pb-6">
+          <p className="text-xs sm:text-sm text-center text-muted-foreground">
             <Link href="/forgot-password" className="underline hover:text-primary">
               Forgot Password?
             </Link>
           </p>
-          <p className="text-sm text-center text-muted-foreground">
+          <p className="text-xs sm:text-sm text-center text-muted-foreground">
             Don&apos;t have an account?{" "}
             <Link href="/signup" className="underline hover:text-primary">
               Sign Up
@@ -147,5 +158,22 @@ export default function SignInPage() {
         </CardFooter>
       </Card>
     </div>
+  );
+}
+
+export default function SignInPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-background px-4 sm:px-6 py-8 sm:py-12">
+        <Card className="w-full max-w-md">
+          <CardHeader className="px-4 sm:px-6 pt-6 sm:pt-6 pb-4 sm:pb-6">
+            <CardTitle className="text-xl sm:text-2xl">Sign In</CardTitle>
+            <CardDescription className="text-sm">Loading...</CardDescription>
+          </CardHeader>
+        </Card>
+      </div>
+    }>
+      <SignInForm />
+    </Suspense>
   );
 }

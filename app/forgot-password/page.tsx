@@ -54,14 +54,14 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background px-4">
+    <div className="min-h-screen flex items-center justify-center bg-background px-4 sm:px-6 py-8 sm:py-12">
       <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>Forgot Password</CardTitle>
-          <CardDescription>Enter your email address and we&apos;ll send you a code to reset your password.</CardDescription>
+        <CardHeader className="px-4 sm:px-6 pt-6 sm:pt-6 pb-4 sm:pb-6">
+          <CardTitle className="text-xl sm:text-2xl">Forgot Password</CardTitle>
+          <CardDescription className="text-sm">Enter your email address and we&apos;ll send you a code to reset your password.</CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-4 px-4 sm:px-6 pb-4 sm:pb-6">
             <div className="space-y-2">
               <Label htmlFor="email">Email Address</Label>
               <Input
@@ -76,12 +76,12 @@ export default function ForgotPasswordPage() {
             </div>
 
             {/* Display Messages */}
-            {message && <p className="text-sm text-green-600 dark:text-green-400">{message}</p>}
-            {error && <p className="text-sm text-red-500">{error}</p>}
+            {message && <p className="text-xs sm:text-sm text-green-600 dark:text-green-400 break-words">{message}</p>}
+            {error && <p className="text-xs sm:text-sm text-red-500 break-words">{error}</p>}
 
           </CardContent>
-          <CardFooter className="flex flex-col gap-4">
-            <Button type="submit" className="w-full" disabled={isLoading}>
+          <CardFooter className="flex flex-col gap-3 sm:gap-4 px-4 sm:px-6 pb-6 sm:pb-6">
+            <Button type="submit" className="w-full h-10 sm:h-11 text-sm" disabled={isLoading}>
               {isLoading ? (
                 <>
                   <Icons.spinner className="mr-2 h-4 w-4 animate-spin" /> Sending...
@@ -90,7 +90,7 @@ export default function ForgotPasswordPage() {
                 "Send Reset Code"
               )}
             </Button>
-            <p className="text-sm text-center text-muted-foreground">
+            <p className="text-xs sm:text-sm text-center text-muted-foreground">
               Remember your password?{" "}
               <Link href="/signin" className="underline hover:text-primary">
                 Sign In
