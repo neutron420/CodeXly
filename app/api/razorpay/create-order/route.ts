@@ -29,6 +29,8 @@ const createOrderLimiter = new RateLimiterMemory({
 
 export async function POST(request: Request) {
   if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
+    // On platforms where envs might be missing during static analysis, avoid throwing,
+    // but keep the runtime check for real requests.
     return NextResponse.json(
       { error: "Payment is temporarily unavailable. Missing Razorpay keys." },
       { status: 500 }
