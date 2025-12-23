@@ -28,6 +28,13 @@ const createOrderLimiter = new RateLimiterMemory({
 });
 
 export async function POST(request: Request) {
+  if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
+    return NextResponse.json(
+      { error: "Payment is temporarily unavailable. Missing Razorpay keys." },
+      { status: 500 }
+    );
+  }
+
   const session = await getServerSession(authOptions);
   const userId = (session?.user as { id?: string } | undefined)?.id;
 
