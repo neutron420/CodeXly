@@ -69,9 +69,11 @@ export default async function ProfilePage() {
       orderBy: { updatedAt: "desc" },
     });
 
-    // Pull all results across users for the contribution heatmap so activity
-    // always reflects the latest practice data (like a global GitHub grid).
+    // Pull only this user's results for the contribution heatmap
     yearlyResults = await prisma.result.findMany({
+      where: {
+        userId: user.id, // Only fetch current user's results
+      },
       select: {
         id: true,
         createdAt: true,
@@ -109,72 +111,140 @@ export default async function ProfilePage() {
           </CardHeader>
         </Card>
 
-        <Card className="mb-6 sm:mb-8 border border-border/70 shadow-sm">
-          <CardHeader className="flex flex-col gap-3 sm:gap-2 sm:flex-row sm:items-center sm:justify-between p-4 sm:p-6">
+        <Card className="mb-6 sm:mb-8 border border-border/70 shadow-lg bg-gradient-to-br from-card/95 to-card/90 backdrop-blur-sm overflow-visible">
+          <CardHeader className="flex flex-col gap-3 sm:gap-2 sm:flex-row sm:items-center sm:justify-between p-4 sm:p-6 bg-gradient-to-r from-card/50 to-transparent border-b border-border/30">
             <div>
-              <CardTitle className="text-base sm:text-lg">Practice streak heatmap</CardTitle>
-              <CardDescription className="text-xs sm:text-sm">Daily saved results across the last 52 weeks.</CardDescription>
+              <CardTitle className="text-base sm:text-lg font-semibold flex items-center gap-2">
+                <Activity className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+                Practice Contribution Graph
+              </CardTitle>
+              <CardDescription className="text-xs sm:text-sm mt-1">
+                Your coding practice activity over the last year
+              </CardDescription>
             </div>
-            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs text-muted-foreground">
-              <span className="flex items-center gap-1">
-                <span className="inline-block h-3 w-3 rounded-sm bg-[rgb(31,41,55)] border border-border/50" />
-                None
-              </span>
-              <span className="flex items-center gap-1">
-                <span className="inline-block h-3 w-3 rounded-sm bg-amber-950" />
-                Low
-              </span>
-              <span className="flex items-center gap-1">
-                <span className="inline-block h-3 w-3 rounded-sm bg-amber-800" />
-                Med
-              </span>
-              <span className="flex items-center gap-1">
-                <span className="inline-block h-3 w-3 rounded-sm bg-amber-500" />
-                High
-              </span>
-              <span className="flex items-center gap-1">
-                <span className="inline-block h-3 w-3 rounded-sm bg-amber-300" />
-                Max
-              </span>
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-[10px] sm:text-xs">
+              <span className="text-muted-foreground font-medium">Less</span>
+              <div className="flex items-center gap-1">
+                <span className="inline-block h-3 w-3 rounded-sm bg-[#161b22] border border-[#30363d] transition-transform hover:scale-110" />
+                <span className="inline-block h-3 w-3 rounded-sm bg-[#0e4429] border border-[#1a7f37] transition-transform hover:scale-110" />
+                <span className="inline-block h-3 w-3 rounded-sm bg-[#006d32] border border-[#238636] transition-transform hover:scale-110" />
+                <span className="inline-block h-3 w-3 rounded-sm bg-[#26a641] border border-[#2ea043] transition-transform hover:scale-110" />
+                <span className="inline-block h-3 w-3 rounded-sm bg-[#39d353] border border-[#3fc653] transition-transform hover:scale-110" />
+                <span className="inline-block h-3 w-3 rounded-sm bg-[#56d364] border border-[#56d364] transition-transform hover:scale-110" />
+              </div>
+              <span className="text-muted-foreground font-medium">More</span>
             </div>
           </CardHeader>
-          <CardContent className="overflow-x-auto px-4 sm:px-6 pb-4 sm:pb-6">
-            {contributions.weeks.length === 0 ? (
-              <p className="py-8 sm:py-10 text-xs sm:text-sm text-muted-foreground text-center">
-                No saved practice yet. Complete a run and hit <span className="font-semibold">Save</span> to start filling this grid.
-              </p>
-            ) : (
-              <>
-                <div className="ml-6 sm:ml-8 mb-2 flex gap-[2px] sm:gap-[3px] text-[9px] sm:text-[10px] text-muted-foreground">
-                  {contributions.monthLabels.map((label, idx) => (
-                    <span key={idx} className="w-3 sm:w-3.5 text-center">
-                      {label ?? ""}
-                    </span>
-                  ))}
-                </div>
-                <div className="flex gap-[2px] sm:gap-[3px]">
-                  <div className="mr-1.5 sm:mr-2 flex flex-col justify-between py-1 text-[9px] sm:text-[10px] text-muted-foreground">
-                    <span>Mon</span>
-                    <span>Wed</span>
-                    <span>Fri</span>
+          <CardContent className="px-4 sm:px-6 pb-4 sm:pb-6 pt-4 sm:pt-6 overflow-visible">
+            <div className="overflow-x-auto overflow-y-visible pb-8">
+              {contributions.weeks.length === 0 ? (
+                <div className="py-8 sm:py-10 text-center">
+                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-muted/50 mb-4">
+                    <Activity className="h-8 w-8 text-muted-foreground/50" />
                   </div>
-                  {contributions.weeks.map((week, idx) => (
-                    <div key={idx} className="flex flex-col gap-[3px]">
-                      {week.map((day) => (
-                        <div
-                          key={day.date}
-                          className={`h-3 w-3 sm:h-3.5 sm:w-3.5 rounded-[2px] sm:rounded-[3px] border border-border/40 ${contributionClass(day.count)}`}
-                          title={`${day.dateLabel}: ${day.count} session${day.count === 1 ? "" : "s"}`}
-                        />
+                  <p className="text-xs sm:text-sm text-muted-foreground">
+                    No saved practice yet. Complete a run and hit <span className="font-semibold text-foreground">Save</span> to start filling this grid.
+                  </p>
+                </div>
+              ) : (
+                <>
+                  {/* Summary Stats */}
+                  <div className="mb-4 sm:mb-5 p-3 sm:p-4 rounded-lg bg-muted/30 border border-border/50 flex flex-wrap items-center gap-4 sm:gap-6 text-xs sm:text-sm">
+                    <div className="flex items-center gap-2">
+                      <div className="h-2 w-2 rounded-full bg-green-500" />
+                      <span className="text-muted-foreground">Total contributions:</span>
+                      <span className="font-semibold text-foreground">
+                        {yearlyResults.length} {yearlyResults.length === 1 ? 'session' : 'sessions'}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="h-2 w-2 rounded-full bg-amber-500" />
+                      <span className="text-muted-foreground">Longest streak:</span>
+                      <span className="font-semibold text-foreground">
+                        {calculateLongestStreak(contributions.weeks)} {calculateLongestStreak(contributions.weeks) === 1 ? 'day' : 'days'}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="h-2 w-2 rounded-full bg-blue-500" />
+                      <span className="text-muted-foreground">This year:</span>
+                      <span className="font-semibold text-foreground">
+                        {new Date().getFullYear()}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Month Labels */}
+                  <div className="ml-6 sm:ml-8 mb-2 sm:mb-3 flex gap-[2px] sm:gap-[3px] text-[9px] sm:text-[10px] text-muted-foreground font-medium min-w-fit">
+                    {contributions.monthLabels.map((label, idx) => (
+                      <span 
+                        key={idx} 
+                        className="w-3.5 sm:w-4 text-center transition-opacity hover:opacity-100 hover:text-foreground flex-shrink-0"
+                        style={{ minWidth: label ? 'auto' : '14px' }}
+                      >
+                        {label ?? ""}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Contribution Grid */}
+                  <div className="flex gap-[2px] sm:gap-[3px] relative min-w-fit">
+                    {/* Day Labels */}
+                    <div className="mr-1.5 sm:mr-2 flex flex-col justify-between py-1 text-[9px] sm:text-[10px] text-muted-foreground font-medium flex-shrink-0">
+                      <span className="leading-none">Mon</span>
+                      <span className="opacity-0 h-3.5 sm:h-4">Tue</span>
+                      <span className="leading-none">Wed</span>
+                      <span className="opacity-0 h-3.5 sm:h-4">Thu</span>
+                      <span className="leading-none">Fri</span>
+                      <span className="opacity-0 h-3.5 sm:h-4">Sat</span>
+                      <span className="opacity-0 h-3.5 sm:h-4">Sun</span>
+                    </div>
+                    
+                    {/* Weeks */}
+                    <div className="flex gap-[2px] sm:gap-[3px]">
+                      {contributions.weeks.map((week, idx) => (
+                        <div key={idx} className="flex flex-col gap-[2px] sm:gap-[3px] group">
+                          {week.map((day, dayIdx) => (
+                            <div
+                              key={day.date}
+                              className={`h-3.5 w-3.5 sm:h-4 sm:w-4 rounded-[3px] transition-all duration-300 cursor-pointer relative group/cell ${contributionClass(day.count)}`}
+                              title={`${day.dateLabel}: ${day.count} practice session${day.count === 1 ? "" : "s"}`}
+                              style={{
+                                animationDelay: `${(idx * 7 + dayIdx) * 10}ms`,
+                              }}
+                            >
+                              {/* Enhanced Tooltip on hover - positioned to avoid clipping */}
+                              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-popover text-popover-foreground text-[11px] rounded-md shadow-xl opacity-0 group-hover/cell:opacity-100 pointer-events-none transition-all duration-200 whitespace-nowrap z-[9999] border border-border/50 backdrop-blur-sm transform">
+                                <div className="font-semibold text-foreground mb-1">{day.dateLabel}</div>
+                                <div className="flex items-center gap-1.5 text-muted-foreground">
+                                  <span className="inline-block h-2 w-2 rounded-full bg-green-500 flex-shrink-0" />
+                                  <span>
+                                    {day.count} {day.count === 1 ? 'practice session' : 'practice sessions'}
+                                  </span>
+                                </div>
+                                <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-popover" />
+                              </div>
+                            </div>
+                          ))}
+                        </div>
                       ))}
                     </div>
-                  ))}
+                  </div>
+
+                {/* Footer Info */}
+                <div className="mt-4 pt-3 border-t border-border/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                  <p className="text-[10px] sm:text-xs text-muted-foreground">
+                    <span className="font-medium">Note:</span> Data based on saved practice results; unsaved runs are not counted.
+                  </p>
+                  <div className="flex items-center gap-2 text-[10px] sm:text-xs text-muted-foreground">
+                    <span className="inline-flex items-center gap-1">
+                      <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+                      Active
+                    </span>
+                  </div>
                 </div>
-                <p className="mt-3 text-xs text-muted-foreground">
-                  Data based on saved practice results; unsaved runs are not counted.
-                </p>
               </>
             )}
+            </div>
           </CardContent>
         </Card>
 
@@ -363,10 +433,52 @@ function buildContributionGrid(results: Pick<Result, "createdAt">[]): Contributi
 }
 
 function contributionClass(count: number) {
-  if (count === 0) return "bg-[rgb(31,41,55)]";
-  if (count === 1) return "bg-amber-600 border border-amber-400";
-  if (count <= 3) return "bg-amber-500 border border-amber-300";
-  if (count <= 6) return "bg-amber-400 border border-amber-200";
-  if (count <= 9) return "bg-amber-300 border border-amber-100";
-  return "bg-amber-200 border border-amber-100";
+  // Enhanced GitHub-style contribution colors with smooth transitions and better hover effects
+  if (count === 0) {
+    return "bg-[#161b22] border border-[#30363d] hover:border-[#484f58] hover:bg-[#21262d] hover:scale-110 hover:shadow-sm hover:shadow-green-500/20";
+  }
+  if (count === 1) {
+    return "bg-[#0e4429] border border-[#1a7f37] hover:border-[#238636] hover:bg-[#1a7f37] hover:scale-110 hover:shadow-md hover:shadow-green-500/30";
+  }
+  if (count <= 3) {
+    return "bg-[#006d32] border border-[#238636] hover:border-[#2ea043] hover:bg-[#238636] hover:scale-110 hover:shadow-md hover:shadow-green-500/40";
+  }
+  if (count <= 6) {
+    return "bg-[#26a641] border border-[#2ea043] hover:border-[#3fc653] hover:bg-[#2ea043] hover:scale-110 hover:shadow-lg hover:shadow-green-500/50";
+  }
+  if (count <= 9) {
+    return "bg-[#39d353] border border-[#3fc653] hover:border-[#56d364] hover:bg-[#3fc653] hover:scale-110 hover:shadow-lg hover:shadow-green-500/60";
+  }
+  return "bg-[#56d364] border border-[#56d364] hover:border-[#7ee787] hover:bg-[#7ee787] hover:scale-110 hover:shadow-xl hover:shadow-green-500/70";
+}
+
+function calculateLongestStreak(weeks: ContributionGrid["weeks"]): number {
+  let longestStreak = 0;
+  let currentStreak = 0;
+
+  // Flatten all days into a single array in chronological order
+  const allDays: { date: string; count: number }[] = [];
+  for (const week of weeks) {
+    for (const day of week) {
+      allDays.push({ date: day.date, count: day.count });
+    }
+  }
+
+  // Calculate streak by checking consecutive days
+  for (let i = 0; i < allDays.length; i++) {
+    if (allDays[i].count > 0) {
+      currentStreak++;
+      longestStreak = Math.max(longestStreak, currentStreak);
+    } else {
+      currentStreak = 0;
+    }
+  }
+
+  // If we have any activity at all, ensure minimum streak is 1
+  const hasAnyActivity = allDays.some(day => day.count > 0);
+  if (hasAnyActivity && longestStreak === 0) {
+    return 1;
+  }
+
+  return longestStreak;
 }

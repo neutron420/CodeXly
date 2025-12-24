@@ -82,16 +82,26 @@ export function PracticeSidebar({
 
       <Select
         value={language}
-        onValueChange={(value) => onLanguageChange(value as LanguageName)}
+        onValueChange={(value) => {
+          const lang = value as LanguageName;
+          // Always call onLanguageChange - it will handle premium check and show modal
+          // If premium and locked, onLanguageChange will return early and not update state
+          // This means the Select will try to change but the controlled value won't update
+          onLanguageChange(lang);
+        }}
       >
         <SelectTrigger className="h-9 sm:h-10 text-xs sm:text-sm">
           <SelectValue placeholder="Language" />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="z-[100]">
           {languages.map((lang) => {
             const locked = premiumLanguages.includes(lang.value) && !isPremium;
             return (
-              <SelectItem key={lang.value} value={lang.value} disabled={locked}>
+              <SelectItem 
+                key={lang.value} 
+                value={lang.value}
+                className={locked ? "opacity-60" : ""}
+              >
                 <div className="flex items-center gap-2">
                   <span>{lang.label}</span>
                   {premiumLanguages.includes(lang.value) ? (

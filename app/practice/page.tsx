@@ -325,25 +325,38 @@ export default function PracticePage() {
     }
 
     try {
-      const res = await fetch(`/api/practice/snippet?${params.toString()}`);
+      const res = await fetch(`/api/practice/snippet?${params.toString()}`, {
+        cache: 'no-store', // Ensure fresh data
+      });
+      
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        throw new Error(data.error || "Failed to load snippet");
+        const errorMessage = data.error || "Failed to load snippet";
+        setSnippetError(errorMessage);
+        // Don't clear snippet on error - keep showing the last one
+        setLoadingSnippet(false);
+        return;
       }
+      
       const data: PracticeSnippet = await res.json();
-      setSnippet(data);
+      
+      // Only update if the language matches (to avoid race conditions)
+      if (data.languageName === lang) {
+        setSnippet(data);
+        setSnippetError(null);
 
-      // Track seen snippet IDs for this session to improve variety.
-      if (data.id) {
-        setSeenSnippetIds((prev) =>
-          prev.includes(data.id!) ? prev : [...prev, data.id!],
-        );
+        // Track seen snippet IDs for this session to improve variety.
+        if (data.id) {
+          setSeenSnippetIds((prev) =>
+            prev.includes(data.id!) ? prev : [...prev, data.id!],
+          );
+        }
       }
     } catch (error) {
-      console.error(error);
-      setSnippetError(
-        error instanceof Error ? error.message : "Unable to load practice snippet right now.",
-      );
+      console.error("Error fetching snippet:", error);
+      const errorMessage = error instanceof Error ? error.message : "Unable to load practice snippet right now.";
+      setSnippetError(errorMessage);
+      // Don't clear snippet on error - keep showing the last one if available
     } finally {
       setLoadingSnippet(false);
     }
@@ -398,9 +411,17 @@ export default function PracticePage() {
               if (locked) {
                 setPremiumModalLanguage(formatLanguage(lang));
                 setPremiumModalOpen(true);
+                // Don't change language if locked - prevent Select from updating
                 return;
               }
+              // Only clear snippet if it's from a different language
+              if (snippet && snippet.languageName !== lang) {
+                setSnippet(null);
+              }
               setSnippetError(null);
+              setTyped("");
+              setElapsedSeconds(0);
+              setIsRunning(false);
               setLanguage(lang);
               setTopic("any");
               void fetchSnippet(lang, difficulty, "any");
@@ -427,7 +448,15 @@ export default function PracticePage() {
               void fetchSnippet(language, next, "any");
             }}
             topic={topic}
-            onTopicChange={setTopic}
+            onTopicChange={(newTopic) => {
+              setTopic(newTopic);
+              setSnippetError(null);
+              // Only clear snippet if topic actually changed and it's not "any"
+              if (newTopic !== topic && newTopic !== "any") {
+                setSnippet(null);
+              }
+              void fetchSnippet(language, difficulty, newTopic);
+            }}
             sampleTopics={sampleTopics}
             durationTarget={durationTarget}
             onDurationChange={setDurationTarget}
@@ -474,12 +503,14 @@ export default function PracticePage() {
               </div>
 
               <div className="relative h-[400px] sm:h-[460px] md:h-[520px] rounded-lg sm:rounded-xl border border-border/70 bg-background px-3 sm:px-4 py-3 sm:py-4 font-mono text-xs sm:text-sm md:text-base leading-relaxed overflow-y-auto">
-                {loadingSnippet ? (
+                {loadingSnippet && !snippet ? (
                   <span className="text-muted-foreground">Loading snippet...</span>
-                ) : (
+                ) : snippet ? (
                   <div className="whitespace-pre-wrap break-words leading-relaxed pointer-events-none select-none">
                     {renderInlineSnippet(targetSnippet, typed)}
                   </div>
+                ) : (
+                  <span className="text-muted-foreground">No snippet available. Click &quot;New&quot; to load one.</span>
                 )}
                 <textarea
                   aria-label="Type the code"

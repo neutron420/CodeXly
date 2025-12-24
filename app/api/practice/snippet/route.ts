@@ -96,7 +96,7 @@ export async function GET(req: NextRequest) {
     const where: Prisma.SnippetWhereInput = {
       languageId: languageRow.id,
       difficulty,
-      ...(topicParam
+      ...(topicParam && topicParam !== "any"
         ? {
             topic: {
               name: {
@@ -125,7 +125,14 @@ export async function GET(req: NextRequest) {
         where,
         skip,
         orderBy: { createdAt: "desc" },
-        include: { language: true, topic: true },
+        include: { 
+          language: {
+            select: { name: true }
+          }, 
+          topic: {
+            select: { name: true }
+          }
+        },
       });
 
       if (snippet) {

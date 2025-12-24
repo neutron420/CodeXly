@@ -66,70 +66,98 @@ export default async function PracticeResultPage({ searchParams }: ResultPagePro
                 Performance graph
               </h2>
               <span className="text-[10px] sm:text-xs text-muted-foreground">
-                WPM trend (synthetic preview)
+                Performance visualization
               </span>
             </div>
-            <div className="h-[180px] sm:h-[220px] rounded-lg sm:rounded-xl border border-border/60 bg-background/60 px-2 sm:px-3 py-2 sm:py-3">
-              <svg viewBox="0 0 100 100" className="h-full w-full" preserveAspectRatio="none">
-                {/* soft background */}
-                <rect
-                  x="0"
-                  y="0"
-                  width="100"
-                  height="100"
-                  fill="#111827"
-                  fillOpacity="0.9"
+            <div className="h-[180px] sm:h-[220px] rounded-lg sm:rounded-xl border border-border/60 bg-gradient-to-br from-background/95 to-background/80 px-2 sm:px-3 py-2 sm:py-3 relative overflow-hidden">
+              {/* Background gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-green-500/5 via-transparent to-transparent pointer-events-none" />
+              
+              <svg viewBox="0 0 100 100" className="h-full w-full relative z-10" preserveAspectRatio="none">
+                {/* Grid background */}
+                <defs>
+                  <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#22c55e" stopOpacity="0.3" />
+                    <stop offset="50%" stopColor="#22c55e" stopOpacity="0.6" />
+                    <stop offset="100%" stopColor="#22c55e" stopOpacity="1" />
+                  </linearGradient>
+                  <filter id="glow">
+                    <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
+                    <feMerge>
+                      <feMergeNode in="coloredBlur"/>
+                      <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                  </filter>
+                </defs>
+
+                {/* Horizontal grid lines with better styling */}
+                {[20, 40, 60, 80].map((y) => (
+                  <line
+                    key={y}
+                    x1="0"
+                    y1={y}
+                    x2="100"
+                    y2={y}
+                    stroke="rgba(255,255,255,0.08)"
+                    strokeWidth="0.5"
+                    strokeDasharray="1 3"
+                  />
+                ))}
+
+                {/* Area fill under the line for better visual */}
+                <polygon
+                  points={`0,100 ${samplePoints.map(p => p.split(',')[0] + ',' + p.split(',')[1]).join(' ')} 100,100`}
+                  fill="url(#lineGradient)"
+                  fillOpacity="0.15"
                 />
 
-                {/* horizontal grid lines */}
+                {/* Main performance line with gradient */}
                 <polyline
                   fill="none"
-                  stroke="rgba(255,255,255,0.18)"
-                  strokeDasharray="2 4"
-                  strokeWidth="0.6"
-                  points="0,80 100,80"
-                />
-                <polyline
-                  fill="none"
-                  stroke="rgba(255,255,255,0.18)"
-                  strokeDasharray="2 4"
-                  strokeWidth="0.6"
-                  points="0,60 100,60"
-                />
-                <polyline
-                  fill="none"
-                  stroke="rgba(255,255,255,0.18)"
-                  strokeDasharray="2 4"
-                  strokeWidth="0.6"
-                  points="0,40 100,40"
-                />
-
-                {/* main spark line */}
-                <polyline
-                  fill="none"
-                  stroke="#22c55e"
-                  strokeWidth="3.2"
+                  stroke="url(#lineGradient)"
+                  strokeWidth="2.5"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   points={samplePoints.join(" ")}
-                  className="drop-shadow-[0_6px_14px_rgba(0,0,0,0.8)]"
+                  filter="url(#glow)"
+                  className="drop-shadow-[0_2px_8px_rgba(34,197,94,0.4)]"
                 />
 
-                {/* highlight last point */}
+                {/* Data points */}
+                {samplePoints.map((point, idx) => {
+                  const [x, y] = point.split(',').map(Number);
+                  return (
+                    <circle
+                      key={idx}
+                      cx={x}
+                      cy={y}
+                      r={idx === samplePoints.length - 1 ? "1.8" : "1.2"}
+                      fill={idx === samplePoints.length - 1 ? "#22c55e" : "rgba(34,197,94,0.6)"}
+                      className={idx === samplePoints.length - 1 ? "drop-shadow-[0_0_8px_rgba(34,197,94,0.8)]" : ""}
+                    />
+                  );
+                })}
+
+                {/* Current session highlight */}
                 <circle
                   cx="100"
                   cy={100 - 0.9 * 80}
-                  r="4"
-                  fill="rgba(34,197,94,0.18)"
+                  r="3.5"
+                  fill="rgba(34,197,94,0.2)"
                 />
                 <circle
                   cx="100"
                   cy={100 - 0.9 * 80}
-                  r="2.6"
+                  r="2.2"
                   fill="#22c55e"
-                  className="drop-shadow-[0_0_10px_rgba(34,197,94,0.95)]"
+                  className="drop-shadow-[0_0_12px_rgba(34,197,94,1)]"
                 />
               </svg>
+              
+              {/* Performance indicator text overlay */}
+              <div className="absolute bottom-2 right-3 text-[9px] sm:text-[10px] text-muted-foreground/70 font-medium">
+                WPM: {wpm.toFixed(1)}
+              </div>
             </div>
           </div>
 
