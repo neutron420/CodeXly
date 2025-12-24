@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Header1 } from "@/components/ui/header";
 import { PracticeSidebar } from "@/components/practice-sidebar";
+import { PremiumUnlockModal } from "@/components/premium-unlock-modal";
 import { AlertCircle, CheckCircle2, Timer } from "lucide-react";
 
 type LanguageName =
@@ -92,6 +93,22 @@ export default function PracticePage() {
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
   const [hasRedirected, setHasRedirected] = useState(false);
   const [autoSavedOnTimeUp, setAutoSavedOnTimeUp] = useState(false);
+  const [seenSnippetIds, setSeenSnippetIds] = useState<string[]>([]);
+  const [unlockedDifficulties, setUnlockedDifficulties] = useState<Difficulty[]>(["BEGINNER"]);
+  const [nextUnlockHint, setNextUnlockHint] = useState<string | null>(null);
+  const [weakTopics, setWeakTopics] = useState<string[]>([]);
+  const [premiumModalOpen, setPremiumModalOpen] = useState(false);
+  const [premiumModalLanguage, setPremiumModalLanguage] = useState<string>("");
+  const [languageSummary, setLanguageSummary] = useState<
+    | {
+        averageWpm: number;
+        averageAccuracy: number;
+        bestWpm: number;
+        snippetsCompleted: number;
+        level: number;
+      }
+    | null
+  >(null);
 
   const isPremium = false; // TODO: wire to real subscription/plan when available
 
@@ -144,6 +161,63 @@ export default function PracticePage() {
       typedLength,
     };
   }, [typed, targetSnippet, elapsedSeconds, durationTarget]);
+
+  // Load per-language stats for the logged-in user to drive progression and analytics.
+  useEffect(() => {
+    if (!session) {
+      setUnlockedDifficulties(["BEGINNER"]);
+      setNextUnlockHint(null);
+      setWeakTopics([]);
+      setLanguageSummary(null);
+      return;
+    }
+
+    const controller = new AbortController();
+
+    const loadStats = async () => {
+      try {
+        const res = await fetch(`/api/practice/stats?language=${language}`, {
+          signal: controller.signal,
+        });
+        if (!res.ok) {
+          return;
+        }
+        const data = await res.json();
+
+        const unlocked = (data.difficultiesUnlocked ?? ["BEGINNER"]) as Difficulty[];
+        setUnlockedDifficulties(unlocked.length > 0 ? unlocked : ["BEGINNER"]);
+
+        if (data.nextUnlock) {
+          const { difficulty, requiredSnippets, requiredAccuracy } = data.nextUnlock as {
+            difficulty: Difficulty;
+            requiredSnippets: number;
+            requiredAccuracy: number;
+          };
+          setNextUnlockHint(
+            `Do ${requiredSnippets}+ runs at good accuracy (~${requiredAccuracy}%+) to unlock ${difficulty.toLowerCase()} for ${formatLanguage(language)}.`,
+          );
+        } else {
+          setNextUnlockHint(null);
+        }
+
+        setWeakTopics((data.weakTopics ?? []) as string[]);
+
+        setLanguageSummary({
+          averageWpm: Number(data.averageWpm ?? 0),
+          averageAccuracy: Number(data.averageAccuracy ?? 0),
+          bestWpm: Number(data.bestWpm ?? 0),
+          snippetsCompleted: Number(data.snippetsCompleted ?? 0),
+          level: Number(data.level ?? 1),
+        });
+      } catch {
+        // Non-fatal: stats are just a UX enhancement.
+      }
+    };
+
+    void loadStats();
+
+    return () => controller.abort();
+  }, [language, session]);
 
   const handleSaveResult = useCallback(async () => {
     if (!snippet) {
@@ -239,6 +313,17 @@ export default function PracticePage() {
       params.set("topic", top);
     }
 
+    // Avoid repeating the same snippet within the current session when possible.
+    const excludeIds =
+      seenSnippetIds.length > 0
+        ? seenSnippetIds.join(",")
+        : snippet?.id
+          ? snippet.id
+          : "";
+    if (excludeIds) {
+      params.set("exclude", excludeIds);
+    }
+
     try {
       const res = await fetch(`/api/practice/snippet?${params.toString()}`);
       if (!res.ok) {
@@ -247,6 +332,13 @@ export default function PracticePage() {
       }
       const data: PracticeSnippet = await res.json();
       setSnippet(data);
+
+      // Track seen snippet IDs for this session to improve variety.
+      if (data.id) {
+        setSeenSnippetIds((prev) =>
+          prev.includes(data.id!) ? prev : [...prev, data.id!],
+        );
+      }
     } catch (error) {
       console.error(error);
       setSnippetError(
@@ -304,7 +396,8 @@ export default function PracticePage() {
             onLanguageChange={(lang) => {
               const locked = PREMIUM_LANGUAGES.includes(lang) && !isPremium;
               if (locked) {
-                setSnippetError("Premium required for this language.");
+                setPremiumModalLanguage(formatLanguage(lang));
+                setPremiumModalOpen(true);
                 return;
               }
               setSnippetError(null);
@@ -313,7 +406,26 @@ export default function PracticePage() {
               void fetchSnippet(lang, difficulty, "any");
             }}
             difficulty={difficulty}
-            onDifficultyChange={setDifficulty}
+            onDifficultyChange={(next) => {
+              if (!unlockedDifficulties.includes(next)) {
+                const label =
+                  next === "INTERMEDIATE"
+                    ? "Intermediate"
+                    : next === "ADVANCED"
+                      ? "Advanced"
+                      : next;
+                setSnippetError(
+                  nextUnlockHint ||
+                    `${label} is locked for ${formatLanguage(language)}. Practice more beginner snippets with good accuracy to unlock.`,
+                );
+                return;
+              }
+
+              setSnippetError(null);
+              setDifficulty(next);
+              setTopic("any");
+              void fetchSnippet(language, next, "any");
+            }}
             topic={topic}
             onTopicChange={setTopic}
             sampleTopics={sampleTopics}
@@ -391,6 +503,30 @@ export default function PracticePage() {
 
             {/* Stats section hidden to keep the coding area focused and spacious */}
 
+            {/* Per-language summary (simple, to avoid clutter) */}
+            {languageSummary && (
+              <div className="flex flex-wrap items-center gap-2 rounded-lg border border-border/70 bg-muted/30 px-3 sm:px-4 py-2.5 sm:py-3 text-[10px] sm:text-xs text-muted-foreground">
+                <span className="font-semibold text-foreground">
+                  {formatLanguage(language)} · Lv {languageSummary.level}
+                </span>
+                <span>Best {languageSummary.bestWpm.toFixed(1)} WPM</span>
+                <span>Avg {languageSummary.averageWpm.toFixed(1)} WPM</span>
+                <span>
+                  Accuracy {languageSummary.averageAccuracy.toFixed(1)}% ·{" "}
+                  {languageSummary.snippetsCompleted} runs
+                </span>
+                {weakTopics.length > 0 ? (
+                  <span>
+                    Weak topics:{" "}
+                    <span className="font-medium">
+                      {weakTopics.slice(0, 3).join(", ")}
+                      {weakTopics.length > 3 ? "…" : ""}
+                    </span>
+                  </span>
+                ) : null}
+              </div>
+            )}
+
             {saveMessage && (
               <div className="flex items-start gap-2 rounded-lg border border-border/70 bg-muted/40 px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm">
                 {saveMessage.toLowerCase().includes("saved") ? (
@@ -411,6 +547,12 @@ export default function PracticePage() {
           </div>
         </section>
       </main>
+
+      <PremiumUnlockModal
+        open={premiumModalOpen}
+        onOpenChange={setPremiumModalOpen}
+        languageName={premiumModalLanguage}
+      />
     </div>
   );
 }

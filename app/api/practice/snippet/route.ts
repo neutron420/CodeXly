@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { Difficulty, LanguageName } from "@prisma/client";
+import { Difficulty, LanguageName, Prisma } from "@prisma/client";
 
 type SnippetResponse = {
   id: string | null;
@@ -68,13 +68,12 @@ export async function GET(req: NextRequest) {
   const languageParam = searchParams.get("language")?.toUpperCase() ?? null;
   const difficultyParam = searchParams.get("difficulty")?.toUpperCase() ?? null;
   const topicParam = searchParams.get("topic");
+  const excludeParam = searchParams.get("exclude"); // comma-separated snippet ids to avoid in this request
 
-  if (!isLanguage(languageParam)) {
-    return NextResponse.json(
-      { error: "Invalid or missing language." },
-      { status: 400 },
-    );
-  }
+  // Gracefully fall back to a default language instead of hard failing.
+  const effectiveLanguage: LanguageName = isLanguage(languageParam)
+    ? languageParam
+    : LanguageName.JAVASCRIPT;
 
   const difficulty: Difficulty = isDifficulty(difficultyParam)
     ? (difficultyParam as Difficulty)
@@ -83,45 +82,47 @@ export async function GET(req: NextRequest) {
   try {
     // Ensure the language row exists so future inserts succeed.
     const languageRow = await prisma.language.upsert({
-      where: { name: languageParam },
+      where: { name: effectiveLanguage },
       update: {},
-      create: { name: languageParam },
+      create: { name: effectiveLanguage },
     });
 
-    const total = await prisma.snippet.count({
-      where: {
-        languageId: languageRow.id,
-        difficulty,
-        ...(topicParam
-          ? {
-              topic: {
-                name: {
-                  equals: topicParam,
-                  mode: "insensitive",
-                },
+    const excludeIds =
+      excludeParam
+        ?.split(",")
+        .map((id) => id.trim())
+        .filter(Boolean) ?? [];
+
+    const where: Prisma.SnippetWhereInput = {
+      languageId: languageRow.id,
+      difficulty,
+      ...(topicParam
+        ? {
+            topic: {
+              name: {
+                equals: topicParam,
+                mode: "insensitive",
               },
-            }
-          : {}),
-      },
+            },
+          }
+        : {}),
+      ...(excludeIds.length > 0
+        ? {
+            id: {
+              notIn: excludeIds,
+            },
+          }
+        : {}),
+    };
+
+    const total = await prisma.snippet.count({
+      where,
     });
 
     if (total > 0) {
       const skip = Math.floor(Math.random() * total);
       const snippet = await prisma.snippet.findFirst({
-        where: {
-          languageId: languageRow.id,
-          difficulty,
-          ...(topicParam
-            ? {
-                topic: {
-                  name: {
-                    equals: topicParam,
-                    mode: "insensitive",
-                  },
-                },
-              }
-            : {}),
-        },
+        where,
         skip,
         orderBy: { createdAt: "desc" },
         include: { language: true, topic: true },
@@ -141,7 +142,7 @@ export async function GET(req: NextRequest) {
     }
 
     // Fallback to an in-memory sample snippet so the UI is still usable.
-    const samples = SAMPLE_SNIPPETS[languageParam] ?? [];
+    const samples = SAMPLE_SNIPPETS[effectiveLanguage] ?? [];
     const filteredSamples = topicParam
       ? samples.filter((s) => s.topic.toLowerCase() === topicParam.toLowerCase())
       : samples;
@@ -152,7 +153,7 @@ export async function GET(req: NextRequest) {
       const fallback: SnippetResponse = {
         id: null,
         content: sample.content,
-        languageName: languageParam,
+        languageName: effectiveLanguage,
         difficulty,
         topicName: sample.topic,
         isSample: true,
