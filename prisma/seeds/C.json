@@ -1,0 +1,88 @@
+[
+  {
+    "topic": "basics",
+    "difficulty": "BEGINNER",
+    "content": "#include <stdio.h>\n\nint main() {\n    printf(\"Hello, CodeXly!\\n\");\n    return 0;\n}\n"
+  },
+  {
+    "topic": "variables",
+    "difficulty": "BEGINNER",
+    "content": "#include <stdio.h>\n\nint main() {\n    int age = 25;\n    float height = 5.9;\n    char grade = 'A';\n    printf(\"Age: %d, Height: %.1f, Grade: %c\\n\", age, height, grade);\n    return 0;\n}\n"
+  },
+  {
+    "topic": "loops",
+    "difficulty": "BEGINNER",
+    "content": "#include <stdio.h>\n\nint main() {\n    int nums[] = {1, 2, 3, 4, 5};\n    int sum = 0;\n    for (int i = 0; i < 5; i++) {\n        sum += nums[i];\n    }\n    printf(\"Sum: %d\\n\", sum);\n    return 0;\n}\n"
+  },
+  {
+    "topic": "loops",
+    "difficulty": "BEGINNER",
+    "content": "#include <stdio.h>\n\nint main() {\n    int i = 1;\n    while (i <= 10) {\n        printf(\"%d \", i);\n        i++;\n    }\n    printf(\"\\n\");\n    return 0;\n}\n"
+  },
+  {
+    "topic": "conditionals",
+    "difficulty": "BEGINNER",
+    "content": "#include <stdio.h>\n\nint main() {\n    int num = 15;\n    if (num % 2 == 0) {\n        printf(\"Even\\n\");\n    } else {\n        printf(\"Odd\\n\");\n    }\n    return 0;\n}\n"
+  },
+  {
+    "topic": "arrays",
+    "difficulty": "BEGINNER",
+    "content": "#include <stdio.h>\n\nint main() {\n    int arr[5] = {10, 20, 30, 40, 50};\n    for (int i = 0; i < 5; i++) {\n        printf(\"arr[%d] = %d\\n\", i, arr[i]);\n    }\n    return 0;\n}\n"
+  },
+  {
+    "topic": "functions",
+    "difficulty": "INTERMEDIATE",
+    "content": "#include <stdio.h>\n\nint add(int a, int b) {\n    return a + b;\n}\n\nint main() {\n    int result = add(5, 3);\n    printf(\"Sum: %d\\n\", result);\n    return 0;\n}\n"
+  },
+  {
+    "topic": "recursion",
+    "difficulty": "INTERMEDIATE",
+    "content": "#include <stdio.h>\n\nint factorial(int n) {\n    if (n <= 1) return 1;\n    return n * factorial(n - 1);\n}\n\nint main() {\n    printf(\"Factorial of 5: %d\\n\", factorial(5));\n    return 0;\n}\n"
+  },
+  {
+    "topic": "recursion",
+    "difficulty": "INTERMEDIATE",
+    "content": "#include <stdio.h>\n\nint fib(int n) {\n    if (n <= 1) return n;\n    return fib(n - 1) + fib(n - 2);\n}\n\nint main() {\n    printf(\"Fibonacci(6): %d\\n\", fib(6));\n    return 0;\n}\n"
+  },
+  {
+    "topic": "pointers",
+    "difficulty": "INTERMEDIATE",
+    "content": "#include <stdio.h>\n\nvoid swap(int *a, int *b) {\n    int temp = *a;\n    *a = *b;\n    *b = temp;\n}\n\nint main() {\n    int x = 3, y = 7;\n    swap(&x, &y);\n    printf(\"x: %d, y: %d\\n\", x, y);\n    return 0;\n}\n"
+  },
+  {
+    "topic": "pointers",
+    "difficulty": "INTERMEDIATE",
+    "content": "#include <stdio.h>\n\nint main() {\n    int num = 42;\n    int *ptr = &num;\n    printf(\"Value: %d, Address: %p\\n\", *ptr, ptr);\n    *ptr = 100;\n    printf(\"New value: %d\\n\", num);\n    return 0;\n}\n"
+  },
+  {
+    "topic": "strings",
+    "difficulty": "INTERMEDIATE",
+    "content": "#include <stdio.h>\n#include <string.h>\n\nint main() {\n    char str[50] = \"Hello\";\n    strcat(str, \" World\");\n    printf(\"Length: %zu\\n\", strlen(str));\n    printf(\"String: %s\\n\", str);\n    return 0;\n}\n"
+  },
+  {
+    "topic": "strings",
+    "difficulty": "INTERMEDIATE",
+    "content": "#include <stdio.h>\n#include <string.h>\n\nint main() {\n    char s1[] = \"codexly\";\n    char s2[] = \"codexly\";\n    if (strcmp(s1, s2) == 0) {\n        printf(\"Strings are equal\\n\");\n    }\n    return 0;\n}\n"
+  },
+  {
+    "topic": "structures",
+    "difficulty": "INTERMEDIATE",
+    "content": "#include <stdio.h>\n\nstruct Person {\n    char name[50];\n    int age;\n    float salary;\n};\n\nint main() {\n    struct Person p = {\"Alice\", 30, 50000.0};\n    printf(\"Name: %s, Age: %d, Salary: %.2f\\n\", p.name, p.age, p.salary);\n    return 0;\n}\n"
+  },
+  {
+    "topic": "dynamic-memory",
+    "difficulty": "ADVANCED",
+    "content": "#include <stdio.h>\n#include <stdlib.h>\n\nint main() {\n    int *arr = (int*)malloc(5 * sizeof(int));\n    for (int i = 0; i < 5; i++) arr[i] = i * 10;\n    for (int i = 0; i < 5; i++) printf(\"%d \", arr[i]);\n    free(arr);\n    return 0;\n}\n"
+  },
+  {
+    "topic": "file-io",
+    "difficulty": "ADVANCED",
+    "content": "#include <stdio.h>\n\nint main() {\n    FILE *file = fopen(\"data.txt\", \"w\");\n    if (file) {\n        fprintf(file, \"Hello from CodeXly\\n\");\n        fclose(file);\n    }\n    return 0;\n}\n"
+  },
+  {
+    "topic": "sorting",
+    "difficulty": "INTERMEDIATE",
+    "content": "#include <stdio.h>\n\nvoid bubbleSort(int arr[], int n) {\n    for (int i = 0; i < n - 1; i++) {\n        for (int j = 0; j < n - i - 1; j++) {\n            if (arr[j] > arr[j + 1]) {\n                int temp = arr[j];\n                arr[j] = arr[j + 1];\n                arr[j + 1] = temp;\n            }\n        }\n    }\n}\n\nint main() {\n    int arr[] = {64, 34, 25, 12, 22};\n    bubbleSort(arr, 5);\n    for (int i = 0; i < 5; i++) printf(\"%d \", arr[i]);\n    return 0;\n}\n"
+  }
+]
+

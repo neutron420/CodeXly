@@ -1,0 +1,78 @@
+[
+  {
+    "topic": "basics",
+    "difficulty": "BEGINNER",
+    "content": "fn main() {\n    println!(\"Hello, CodeXly!\");\n}\n"
+  },
+  {
+    "topic": "variables",
+    "difficulty": "BEGINNER",
+    "content": "fn main() {\n    let name = \"CodeXly\";\n    let age = 25;\n    println!(\"{} is {} years old\", name, age);\n}\n"
+  },
+  {
+    "topic": "mutability",
+    "difficulty": "BEGINNER",
+    "content": "fn main() {\n    let mut count = 0;\n    count += 1;\n    println!(\"Count: {}\", count);\n}\n"
+  },
+  {
+    "topic": "vectors",
+    "difficulty": "BEGINNER",
+    "content": "fn main() {\n    let mut v = vec![1, 2, 3];\n    v.push(4);\n    println!(\"{:?}\", v);\n}\n"
+  },
+  {
+    "topic": "iterators",
+    "difficulty": "INTERMEDIATE",
+    "content": "fn main() {\n    let nums = vec![1, 2, 3, 4];\n    let sum: i32 = nums.iter().sum();\n    println!(\"Sum: {}\", sum);\n}\n"
+  },
+  {
+    "topic": "iterators",
+    "difficulty": "INTERMEDIATE",
+    "content": "fn main() {\n    let nums = vec![1, 2, 3, 4, 5];\n    let doubled: Vec<i32> = nums.iter().map(|x| x * 2).collect();\n    println!(\"{:?}\", doubled);\n}\n"
+  },
+  {
+    "topic": "strings",
+    "difficulty": "INTERMEDIATE",
+    "content": "fn is_palindrome(s: &str) -> bool {\n    let r: String = s.chars().rev().collect();\n    s == r\n}\n\nfn main() {\n    println!(\"{}\", is_palindrome(\"racecar\"));\n}\n"
+  },
+  {
+    "topic": "ownership",
+    "difficulty": "ADVANCED",
+    "content": "fn main() {\n    let s1 = String::from(\"hello\");\n    let s2 = s1.clone();\n    println!(\"{}, {}\", s1, s2);\n}\n"
+  },
+  {
+    "topic": "borrowing",
+    "difficulty": "ADVANCED",
+    "content": "fn calculate_length(s: &String) -> usize {\n    s.len()\n}\n\nfn main() {\n    let s = String::from(\"hello\");\n    let len = calculate_length(&s);\n    println!(\"Length: {}\", len);\n}\n"
+  },
+  {
+    "topic": "structs",
+    "difficulty": "INTERMEDIATE",
+    "content": "struct Person {\n    name: String,\n    age: u32,\n}\n\nfn main() {\n    let p = Person { name: String::from(\"Alice\"), age: 30 };\n    println!(\"{} is {} years old\", p.name, p.age);\n}\n"
+  },
+  {
+    "topic": "enums",
+    "difficulty": "INTERMEDIATE",
+    "content": "enum Status {\n    Success,\n    Error(String),\n}\n\nfn main() {\n    let status = Status::Success;\n    match status {\n        Status::Success => println!(\"OK\"),\n        Status::Error(msg) => println!(\"Error: {}\", msg),\n    }\n}\n"
+  },
+  {
+    "topic": "options",
+    "difficulty": "INTERMEDIATE",
+    "content": "fn main() {\n    let maybe_num = Some(42);\n    match maybe_num {\n        Some(n) => println!(\"Number: {}\", n),\n        None => println!(\"No number\"),\n    }\n}\n"
+  },
+  {
+    "topic": "results",
+    "difficulty": "INTERMEDIATE",
+    "content": "fn divide(a: f64, b: f64) -> Result<f64, String> {\n    if b == 0.0 {\n        Err(String::from(\"Division by zero\"))\n    } else {\n        Ok(a / b)\n    }\n}\n\nfn main() {\n    match divide(10.0, 2.0) {\n        Ok(result) => println!(\"Result: {}\", result),\n        Err(e) => println!(\"Error: {}\", e),\n    }\n}\n"
+  },
+  {
+    "topic": "closures",
+    "difficulty": "ADVANCED",
+    "content": "fn main() {\n    let add_one = |x| x + 1;\n    println!(\"{}\", add_one(5));\n}\n"
+  },
+  {
+    "topic": "traits",
+    "difficulty": "ADVANCED",
+    "content": "trait Greet {\n    fn greet(&self) -> String;\n}\n\nstruct Person { name: String }\n\nimpl Greet for Person {\n    fn greet(&self) -> String {\n        format!(\"Hello, {}!\", self.name)\n    }\n}\n\nfn main() {\n    let p = Person { name: String::from(\"Alice\") };\n    println!(\"{}\", p.greet());\n}\n"
+  }
+]
+

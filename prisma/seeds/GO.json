@@ -1,0 +1,83 @@
+[
+  {
+    "topic": "basics",
+    "difficulty": "BEGINNER",
+    "content": "package main\n\nimport \"fmt\"\n\nfunc main() {\n    fmt.Println(\"Hello, CodeXly!\")\n}\n"
+  },
+  {
+    "topic": "variables",
+    "difficulty": "BEGINNER",
+    "content": "package main\n\nimport \"fmt\"\n\nfunc main() {\n    var name string = \"CodeXly\"\n    age := 25\n    fmt.Printf(\"%s is %d years old\\n\", name, age)\n}\n"
+  },
+  {
+    "topic": "slices",
+    "difficulty": "BEGINNER",
+    "content": "package main\n\nimport \"fmt\"\n\nfunc main() {\n    nums := []int{1, 2, 3, 4, 5}\n    fmt.Println(nums)\n    nums = append(nums, 6)\n    fmt.Println(nums)\n}\n"
+  },
+  {
+    "topic": "loops",
+    "difficulty": "BEGINNER",
+    "content": "package main\n\nimport \"fmt\"\n\nfunc main() {\n    nums := []int{1, 2, 3}\n    sum := 0\n    for _, n := range nums {\n        sum += n\n    }\n    fmt.Println(sum)\n}\n"
+  },
+  {
+    "topic": "loops",
+    "difficulty": "BEGINNER",
+    "content": "package main\n\nimport \"fmt\"\n\nfunc main() {\n    for i := 1; i <= 10; i++ {\n        fmt.Print(i, \" \")\n    }\n    fmt.Println()\n}\n"
+  },
+  {
+    "topic": "maps",
+    "difficulty": "INTERMEDIATE",
+    "content": "package main\n\nimport \"fmt\"\n\nfunc main() {\n    scores := make(map[string]int)\n    scores[\"alice\"] = 95\n    scores[\"bob\"] = 87\n    fmt.Println(scores[\"alice\"])\n}\n"
+  },
+  {
+    "topic": "strings",
+    "difficulty": "INTERMEDIATE",
+    "content": "package main\n\nimport (\n    \"fmt\"\n    \"strings\"\n)\n\nfunc isPalindrome(s string) bool {\n    r := []rune(s)\n    for i, j := 0, len(r)-1; i < j; i, j = i+1, j-1 {\n        if r[i] != r[j] {\n            return false\n        }\n    }\n    return true\n}\n\nfunc main() {\n    fmt.Println(isPalindrome(\"racecar\"))\n}\n"
+  },
+  {
+    "topic": "functions",
+    "difficulty": "BEGINNER",
+    "content": "package main\n\nimport \"fmt\"\n\nfunc add(a int, b int) int {\n    return a + b\n}\n\nfunc main() {\n    result := add(5, 3)\n    fmt.Println(result)\n}\n"
+  },
+  {
+    "topic": "multiple-returns",
+    "difficulty": "INTERMEDIATE",
+    "content": "package main\n\nimport \"fmt\"\n\nfunc divide(a, b float64) (float64, error) {\n    if b == 0 {\n        return 0, fmt.Errorf(\"division by zero\")\n    }\n    return a / b, nil\n}\n\nfunc main() {\n    result, err := divide(10, 2)\n    if err != nil {\n        fmt.Println(\"Error:\", err)\n    } else {\n        fmt.Println(\"Result:\", result)\n    }\n}\n"
+  },
+  {
+    "topic": "structs",
+    "difficulty": "INTERMEDIATE",
+    "content": "package main\n\nimport \"fmt\"\n\ntype Person struct {\n    Name string\n    Age  int\n}\n\nfunc main() {\n    p := Person{Name: \"Alice\", Age: 30}\n    fmt.Printf(\"%s is %d years old\\n\", p.Name, p.Age)\n}\n"
+  },
+  {
+    "topic": "methods",
+    "difficulty": "INTERMEDIATE",
+    "content": "package main\n\nimport \"fmt\"\n\ntype Rectangle struct {\n    Width  float64\n    Height float64\n}\n\nfunc (r Rectangle) Area() float64 {\n    return r.Width * r.Height\n}\n\nfunc main() {\n    rect := Rectangle{Width: 5, Height: 3}\n    fmt.Println(\"Area:\", rect.Area())\n}\n"
+  },
+  {
+    "topic": "interfaces",
+    "difficulty": "ADVANCED",
+    "content": "package main\n\nimport \"fmt\"\n\ntype Shape interface {\n    Area() float64\n}\n\ntype Circle struct {\n    Radius float64\n}\n\nfunc (c Circle) Area() float64 {\n    return 3.14159 * c.Radius * c.Radius\n}\n\nfunc main() {\n    c := Circle{Radius: 5}\n    fmt.Println(\"Area:\", c.Area())\n}\n"
+  },
+  {
+    "topic": "goroutines",
+    "difficulty": "ADVANCED",
+    "content": "package main\n\nimport (\n    \"fmt\"\n    \"time\"\n)\n\nfunc sayHello() {\n    fmt.Println(\"Hello from goroutine\")\n}\n\nfunc main() {\n    go sayHello()\n    time.Sleep(100 * time.Millisecond)\n    fmt.Println(\"Main function\")\n}\n"
+  },
+  {
+    "topic": "channels",
+    "difficulty": "ADVANCED",
+    "content": "package main\n\nimport \"fmt\"\n\nfunc main() {\n    ch := make(chan string)\n    go func() {\n        ch <- \"Hello from channel\"\n    }()\n    msg := <-ch\n    fmt.Println(msg)\n}\n"
+  },
+  {
+    "topic": "defer",
+    "difficulty": "INTERMEDIATE",
+    "content": "package main\n\nimport \"fmt\"\n\nfunc main() {\n    defer fmt.Println(\"World\")\n    fmt.Println(\"Hello\")\n}\n"
+  },
+  {
+    "topic": "pointers",
+    "difficulty": "INTERMEDIATE",
+    "content": "package main\n\nimport \"fmt\"\n\nfunc swap(a, b *int) {\n    *a, *b = *b, *a\n}\n\nfunc main() {\n    x, y := 3, 7\n    swap(&x, &y)\n    fmt.Println(x, y)\n}\n"
+  }
+]
+

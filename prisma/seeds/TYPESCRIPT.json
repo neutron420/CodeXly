@@ -1,0 +1,73 @@
+[
+  {
+    "topic": "basics",
+    "difficulty": "BEGINNER",
+    "content": "console.log(\"Hello, CodeXly!\");\n"
+  },
+  {
+    "topic": "types",
+    "difficulty": "BEGINNER",
+    "content": "let age: number = 25;\nlet name: string = \"Alice\";\nlet isActive: boolean = true;\nconsole.log(name, age, isActive);\n"
+  },
+  {
+    "topic": "types",
+    "difficulty": "INTERMEDIATE",
+    "content": "type User = { id: string; name: string; age: number };\nconst format = (user: User) => `Hello ${user.name}, age ${user.age}`;\nconsole.log(format({ id: \"1\", name: \"Dev\", age: 25 }));\n"
+  },
+  {
+    "topic": "interfaces",
+    "difficulty": "INTERMEDIATE",
+    "content": "interface Person {\n    name: string;\n    age: number;\n}\n\nconst greet = (p: Person) => `Hi ${p.name}!`;\nconsole.log(greet({ name: \"Bob\", age: 30 }));\n"
+  },
+  {
+    "topic": "functions",
+    "difficulty": "INTERMEDIATE",
+    "content": "function add(a: number, b: number): number {\n    return a + b;\n}\n\nconsole.log(add(5, 3));\n"
+  },
+  {
+    "topic": "generics",
+    "difficulty": "ADVANCED",
+    "content": "function identity<T>(arg: T): T {\n    return arg;\n}\n\nconsole.log(identity<string>(\"hello\"));\nconsole.log(identity<number>(42));\n"
+  },
+  {
+    "topic": "generics",
+    "difficulty": "ADVANCED",
+    "content": "class Box<T> {\n    private value: T;\n    constructor(value: T) { this.value = value; }\n    getValue(): T { return this.value; }\n}\n\nconst box = new Box<string>(\"Hello\");\nconsole.log(box.getValue());\n"
+  },
+  {
+    "topic": "unions",
+    "difficulty": "INTERMEDIATE",
+    "content": "type Status = \"pending\" | \"success\" | \"error\";\nfunction handleStatus(s: Status) {\n    console.log(`Status: ${s}`);\n}\n\nhandleStatus(\"success\");\n"
+  },
+  {
+    "topic": "enums",
+    "difficulty": "INTERMEDIATE",
+    "content": "enum Color {\n    Red = \"RED\",\n    Green = \"GREEN\",\n    Blue = \"BLUE\"\n}\n\nconsole.log(Color.Red);\n"
+  },
+  {
+    "topic": "optional",
+    "difficulty": "INTERMEDIATE",
+    "content": "interface User {\n    name: string;\n    email?: string;\n}\n\nconst user: User = { name: \"Alice\" };\nconsole.log(user.email ?? \"No email\");\n"
+  },
+  {
+    "topic": "math",
+    "difficulty": "INTERMEDIATE",
+    "content": "type Point = { x: number; y: number };\nconst dist = (a: Point, b: Point) => Math.hypot(a.x - b.x, a.y - b.y);\nconsole.log(dist({ x: 0, y: 0 }, { x: 3, y: 4 }));\n"
+  },
+  {
+    "topic": "async",
+    "difficulty": "ADVANCED",
+    "content": "async function fetchData(): Promise<string> {\n    return new Promise(resolve => {\n        setTimeout(() => resolve(\"Data loaded\"), 1000);\n    });\n}\n\nfetchData().then(console.log);\n"
+  },
+  {
+    "topic": "utility-types",
+    "difficulty": "ADVANCED",
+    "content": "interface User {\n    name: string;\n    age: number;\n    email: string;\n}\n\ntype PartialUser = Partial<User>;\nconst user: PartialUser = { name: \"Alice\" };\nconsole.log(user);\n"
+  },
+  {
+    "topic": "decorators",
+    "difficulty": "ADVANCED",
+    "content": "function log(target: any, propertyKey: string) {\n    console.log(`Calling ${propertyKey}`);\n}\n\nclass Calculator {\n    @log\n    add(a: number, b: number) { return a + b; }\n}\n\nconst calc = new Calculator();\ncalc.add(2, 3);\n"
+  }
+]
+

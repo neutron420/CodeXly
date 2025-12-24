@@ -1,0 +1,78 @@
+[
+  {
+    "topic": "basics",
+    "difficulty": "BEGINNER",
+    "content": "class Main {\n    public static void main(String[] args) {\n        System.out.println(\"Hello, CodeXly!\");\n    }\n}\n"
+  },
+  {
+    "topic": "loops",
+    "difficulty": "BEGINNER",
+    "content": "class Main {\n    public static void main(String[] args) {\n        int[] arr = {1, 2, 3, 4, 5};\n        int sum = 0;\n        for (int n : arr) sum += n;\n        System.out.println(\"Sum: \" + sum);\n    }\n}\n"
+  },
+  {
+    "topic": "loops",
+    "difficulty": "BEGINNER",
+    "content": "class Main {\n    public static void main(String[] args) {\n        for (int i = 1; i <= 10; i++) {\n            System.out.print(i + \" \");\n        }\n        System.out.println();\n    }\n}\n"
+  },
+  {
+    "topic": "arrays",
+    "difficulty": "BEGINNER",
+    "content": "class Main {\n    public static void main(String[] args) {\n        int[] numbers = {10, 20, 30, 40, 50};\n        for (int i = 0; i < numbers.length; i++) {\n            System.out.println(\"Index \" + i + \": \" + numbers[i]);\n        }\n    }\n}\n"
+  },
+  {
+    "topic": "conditionals",
+    "difficulty": "BEGINNER",
+    "content": "class Main {\n    public static void main(String[] args) {\n        int score = 85;\n        if (score >= 90) {\n            System.out.println(\"Grade: A\");\n        } else if (score >= 80) {\n            System.out.println(\"Grade: B\");\n        } else {\n            System.out.println(\"Grade: C\");\n        }\n    }\n}\n"
+  },
+  {
+    "topic": "streams",
+    "difficulty": "INTERMEDIATE",
+    "content": "import java.util.*;\nclass Main {\n    public static void main(String[] args) {\n        List<String> names = Arrays.asList(\"ana\", \"bob\", \"carl\");\n        names.stream().sorted().forEach(System.out::println);\n    }\n}\n"
+  },
+  {
+    "topic": "streams",
+    "difficulty": "INTERMEDIATE",
+    "content": "import java.util.*;\nclass Main {\n    public static void main(String[] args) {\n        List<Integer> nums = Arrays.asList(1, 2, 3, 4, 5);\n        int sum = nums.stream().mapToInt(x -> x).sum();\n        System.out.println(\"Sum: \" + sum);\n    }\n}\n"
+  },
+  {
+    "topic": "collections",
+    "difficulty": "INTERMEDIATE",
+    "content": "import java.util.*;\nclass Main {\n    public static void main(String[] args) {\n        Map<String, Integer> scores = new HashMap<>();\n        scores.put(\"alice\", 10);\n        scores.put(\"bob\", 7);\n        System.out.println(scores.getOrDefault(\"alice\", 0));\n    }\n}\n"
+  },
+  {
+    "topic": "collections",
+    "difficulty": "INTERMEDIATE",
+    "content": "import java.util.*;\nclass Main {\n    public static void main(String[] args) {\n        List<String> list = new ArrayList<>();\n        list.add(\"apple\");\n        list.add(\"banana\");\n        list.forEach(System.out::println);\n    }\n}\n"
+  },
+  {
+    "topic": "optional",
+    "difficulty": "INTERMEDIATE",
+    "content": "import java.util.Optional;\nclass Main {\n    public static void main(String[] args) {\n        Optional<String> maybe = Optional.of(\"CodeXly\");\n        System.out.println(maybe.map(String::toUpperCase).orElse(\"EMPTY\"));\n    }\n}\n"
+  },
+  {
+    "topic": "classes",
+    "difficulty": "INTERMEDIATE",
+    "content": "class Person {\n    private String name;\n    private int age;\n    \n    public Person(String name, int age) {\n        this.name = name;\n        this.age = age;\n    }\n    \n    public String getName() { return name; }\n    public int getAge() { return age; }\n}\n\nclass Main {\n    public static void main(String[] args) {\n        Person p = new Person(\"Alice\", 30);\n        System.out.println(p.getName());\n    }\n}\n"
+  },
+  {
+    "topic": "inheritance",
+    "difficulty": "INTERMEDIATE",
+    "content": "class Animal {\n    void sound() { System.out.println(\"Some sound\"); }\n}\n\nclass Dog extends Animal {\n    void sound() { System.out.println(\"Woof\"); }\n}\n\nclass Main {\n    public static void main(String[] args) {\n        Dog d = new Dog();\n        d.sound();\n    }\n}\n"
+  },
+  {
+    "topic": "exceptions",
+    "difficulty": "INTERMEDIATE",
+    "content": "class Main {\n    public static void main(String[] args) {\n        try {\n            int result = 10 / 0;\n        } catch (ArithmeticException e) {\n            System.out.println(\"Error: \" + e.getMessage());\n        }\n    }\n}\n"
+  },
+  {
+    "topic": "generics",
+    "difficulty": "ADVANCED",
+    "content": "class Box<T> {\n    private T value;\n    public void set(T value) { this.value = value; }\n    public T get() { return value; }\n}\n\nclass Main {\n    public static void main(String[] args) {\n        Box<String> box = new Box<>();\n        box.set(\"Hello\");\n        System.out.println(box.get());\n    }\n}\n"
+  },
+  {
+    "topic": "lambda",
+    "difficulty": "ADVANCED",
+    "content": "import java.util.*;\nclass Main {\n    public static void main(String[] args) {\n        List<Integer> nums = Arrays.asList(1, 2, 3, 4, 5);\n        nums.forEach(n -> System.out.println(n * 2));\n    }\n}\n"
+  }
+]
+

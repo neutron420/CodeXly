@@ -1,0 +1,88 @@
+[
+  {
+    "topic": "basics",
+    "difficulty": "BEGINNER",
+    "content": "console.log(\"Hello, CodeXly!\");\n"
+  },
+  {
+    "topic": "variables",
+    "difficulty": "BEGINNER",
+    "content": "const name = \"CodeXly\";\nlet count = 10;\nvar isActive = true;\nconsole.log(name, count, isActive);\n"
+  },
+  {
+    "topic": "arrays",
+    "difficulty": "BEGINNER",
+    "content": "const fruits = [\"apple\", \"banana\", \"orange\"];\nconsole.log(fruits.length);\nfruits.push(\"grape\");\nconsole.log(fruits);\n"
+  },
+  {
+    "topic": "array-reduce",
+    "difficulty": "INTERMEDIATE",
+    "content": "const nums = [1, 2, 3, 4, 5];\nconst sum = nums.reduce((acc, n) => acc + n, 0);\nconsole.log(\"Sum:\", sum);\n"
+  },
+  {
+    "topic": "array-methods",
+    "difficulty": "INTERMEDIATE",
+    "content": "const words = [\"code\", \"xly\", \"practice\"];\nconst upper = words.map(w => w.toUpperCase()).join(\" - \");\nconsole.log(upper);\n"
+  },
+  {
+    "topic": "array-methods",
+    "difficulty": "INTERMEDIATE",
+    "content": "const numbers = [1, 2, 3, 4, 5, 6];\nconst evens = numbers.filter(n => n % 2 === 0);\nconsole.log(evens);\n"
+  },
+  {
+    "topic": "objects",
+    "difficulty": "BEGINNER",
+    "content": "const user = {\n    name: \"Alice\",\n    age: 30,\n    city: \"NYC\"\n};\nconsole.log(user.name, user[\"age\"]);\n"
+  },
+  {
+    "topic": "destructuring",
+    "difficulty": "INTERMEDIATE",
+    "content": "const person = { name: \"Bob\", age: 25, city: \"LA\" };\nconst { name, age } = person;\nconsole.log(name, age);\n"
+  },
+  {
+    "topic": "spread",
+    "difficulty": "INTERMEDIATE",
+    "content": "const arr1 = [1, 2, 3];\nconst arr2 = [4, 5, 6];\nconst combined = [...arr1, ...arr2];\nconsole.log(combined);\n"
+  },
+  {
+    "topic": "functions",
+    "difficulty": "BEGINNER",
+    "content": "function greet(name) {\n    return `Hello, ${name}!`;\n}\nconsole.log(greet(\"CodeXly\"));\n"
+  },
+  {
+    "topic": "arrow-functions",
+    "difficulty": "INTERMEDIATE",
+    "content": "const multiply = (a, b) => a * b;\nconsole.log(multiply(5, 3));\n"
+  },
+  {
+    "topic": "async-await",
+    "difficulty": "ADVANCED",
+    "content": "async function fetchUser(id) {\n    const res = await fetch(`https://jsonplaceholder.typicode.com/users/${id}`);\n    const user = await res.json();\n    console.log(user.name);\n}\n\nfetchUser(1);\n"
+  },
+  {
+    "topic": "promises",
+    "difficulty": "ADVANCED",
+    "content": "const promise = new Promise((resolve) => {\n    setTimeout(() => resolve(\"Done!\"), 1000);\n});\n\npromise.then(result => console.log(result));\n"
+  },
+  {
+    "topic": "memoization",
+    "difficulty": "ADVANCED",
+    "content": "function memoize(fn) {\n    const cache = new Map();\n    return (x) => {\n        if (cache.has(x)) return cache.get(x);\n        const result = fn(x);\n        cache.set(x, result);\n        return result;\n    };\n}\n\nconst fib = memoize(n => n < 2 ? n : fib(n - 1) + fib(n - 2));\nconsole.log(fib(10));\n"
+  },
+  {
+    "topic": "closures",
+    "difficulty": "ADVANCED",
+    "content": "function outer() {\n    let count = 0;\n    return function inner() {\n        count++;\n        return count;\n    };\n}\n\nconst counter = outer();\nconsole.log(counter());\nconsole.log(counter());\n"
+  },
+  {
+    "topic": "classes",
+    "difficulty": "INTERMEDIATE",
+    "content": "class Person {\n    constructor(name, age) {\n        this.name = name;\n        this.age = age;\n    }\n    \n    greet() {\n        return `Hi, I'm ${this.name}`;\n    }\n}\n\nconst p = new Person(\"Alice\", 30);\nconsole.log(p.greet());\n"
+  },
+  {
+    "topic": "modules",
+    "difficulty": "INTERMEDIATE",
+    "content": "// utils.js\nexport const add = (a, b) => a + b;\nexport const multiply = (a, b) => a * b;\n\n// main.js\nimport { add, multiply } from './utils.js';\nconsole.log(add(2, 3), multiply(2, 3));\n"
+  }
+]
+

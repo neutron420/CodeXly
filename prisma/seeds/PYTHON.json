@@ -1,0 +1,93 @@
+[
+  {
+    "topic": "basics",
+    "difficulty": "BEGINNER",
+    "content": "print(\"Hello, CodeXly!\")\n"
+  },
+  {
+    "topic": "variables",
+    "difficulty": "BEGINNER",
+    "content": "name = \"CodeXly\"\nage = 25\nis_active = True\nprint(f\"{name} is {age} years old\")\n"
+  },
+  {
+    "topic": "lists",
+    "difficulty": "BEGINNER",
+    "content": "fruits = [\"apple\", \"banana\", \"orange\"]\nfruits.append(\"grape\")\nprint(fruits)\n"
+  },
+  {
+    "topic": "loops",
+    "difficulty": "BEGINNER",
+    "content": "for i in range(1, 11):\n    print(i, end=\" \")\nprint()\n"
+  },
+  {
+    "topic": "list-comprehension",
+    "difficulty": "INTERMEDIATE",
+    "content": "squares = [x**2 for x in range(1, 6)]\nprint(squares)\n"
+  },
+  {
+    "topic": "dictionaries",
+    "difficulty": "BEGINNER",
+    "content": "user = {\"name\": \"Alice\", \"age\": 30, \"city\": \"NYC\"}\nprint(user[\"name\"])\nprint(user.get(\"email\", \"No email\"))\n"
+  },
+  {
+    "topic": "hashmap",
+    "difficulty": "INTERMEDIATE",
+    "content": "def two_sum(nums, target):\n    lookup = {}\n    for i, n in enumerate(nums):\n        if target - n in lookup:\n            return [lookup[target - n], i]\n        lookup[n] = i\n    return []\n\nprint(two_sum([2, 7, 11, 15], 9))\n"
+  },
+  {
+    "topic": "functions",
+    "difficulty": "BEGINNER",
+    "content": "def greet(name):\n    return f\"Hello, {name}!\"\n\nprint(greet(\"CodeXly\"))\n"
+  },
+  {
+    "topic": "lambda",
+    "difficulty": "INTERMEDIATE",
+    "content": "multiply = lambda x, y: x * y\nprint(multiply(5, 3))\n"
+  },
+  {
+    "topic": "collections",
+    "difficulty": "INTERMEDIATE",
+    "content": "from collections import Counter\n\ns = \"banana\"\nc = Counter(s)\nprint(c.most_common(1)[0])\n"
+  },
+  {
+    "topic": "collections",
+    "difficulty": "INTERMEDIATE",
+    "content": "from collections import defaultdict\n\nd = defaultdict(int)\nd[\"apple\"] += 1\nd[\"banana\"] += 2\nprint(dict(d))\n"
+  },
+  {
+    "topic": "decorators",
+    "difficulty": "ADVANCED",
+    "content": "def timer(func):\n    def wrapper(*args, **kwargs):\n        import time\n        start = time.time()\n        result = func(*args, **kwargs)\n        print(f\"Time: {time.time() - start:.2f}s\")\n        return result\n    return wrapper\n\n@timer\ndef slow_function():\n    return sum(range(1000000))\n\nslow_function()\n"
+  },
+  {
+    "topic": "generators",
+    "difficulty": "ADVANCED",
+    "content": "def fibonacci(n):\n    a, b = 0, 1\n    for _ in range(n):\n        yield a\n        a, b = b, a + b\n\nfor num in fibonacci(10):\n    print(num, end=\" \")\nprint()\n"
+  },
+  {
+    "topic": "classes",
+    "difficulty": "INTERMEDIATE",
+    "content": "class Person:\n    def __init__(self, name, age):\n        self.name = name\n        self.age = age\n    \n    def greet(self):\n        return f\"Hi, I'm {self.name}\"\n\np = Person(\"Alice\", 30)\nprint(p.greet())\n"
+  },
+  {
+    "topic": "f-strings",
+    "difficulty": "INTERMEDIATE",
+    "content": "name = \"CodeXly\"\nscore = 95\nprint(f\"{name} scored {score}%\")\n"
+  },
+  {
+    "topic": "slicing",
+    "difficulty": "INTERMEDIATE",
+    "content": "text = \"CodeXly\"\nprint(text[::-1])\nprint(text[0:4])\n"
+  },
+  {
+    "topic": "unpacking",
+    "difficulty": "INTERMEDIATE",
+    "content": "a, b, *rest = [1, 2, 3, 4, 5]\nprint(a, b, rest)\n"
+  },
+  {
+    "topic": "itertools",
+    "difficulty": "ADVANCED",
+    "content": "from itertools import combinations\n\nitems = [\"a\", \"b\", \"c\"]\nfor combo in combinations(items, 2):\n    print(combo)\n"
+  }
+]
+

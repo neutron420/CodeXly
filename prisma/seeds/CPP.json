@@ -1,0 +1,78 @@
+[
+  {
+    "topic": "basics",
+    "difficulty": "BEGINNER",
+    "content": "#include <iostream>\nusing namespace std;\n\nint main() {\n    cout << \"Hello, CodeXly!\" << endl;\n    return 0;\n}\n"
+  },
+  {
+    "topic": "stl",
+    "difficulty": "BEGINNER",
+    "content": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    vector<int> nums{1, 2, 3, 4};\n    long long sum = accumulate(nums.begin(), nums.end(), 0LL);\n    cout << sum << endl;\n    return 0;\n}\n"
+  },
+  {
+    "topic": "stl",
+    "difficulty": "BEGINNER",
+    "content": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    vector<int> v = {5, 2, 8, 1, 9};\n    sort(v.begin(), v.end());\n    for (int x : v) cout << x << \" \";\n    return 0;\n}\n"
+  },
+  {
+    "topic": "strings",
+    "difficulty": "BEGINNER",
+    "content": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    string s = \"racecar\";\n    string r = s;\n    reverse(r.begin(), r.end());\n    cout << boolalpha << (s == r) << endl;\n    return 0;\n}\n"
+  },
+  {
+    "topic": "strings",
+    "difficulty": "INTERMEDIATE",
+    "content": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    string text = \"hello world codexly\";\n    transform(text.begin(), text.end(), text.begin(), ::toupper);\n    cout << text << endl;\n    return 0;\n}\n"
+  },
+  {
+    "topic": "maps",
+    "difficulty": "INTERMEDIATE",
+    "content": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    map<string, int> freq;\n    vector<string> words{\"code\", \"xly\", \"code\"};\n    for (auto &w : words) freq[w]++;\n    for (auto &p : freq) cout << p.first << \": \" << p.second << endl;\n    return 0;\n}\n"
+  },
+  {
+    "topic": "maps",
+    "difficulty": "INTERMEDIATE",
+    "content": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    unordered_map<int, string> m;\n    m[1] = \"one\";\n    m[2] = \"two\";\n    if (m.find(1) != m.end()) cout << m[1] << endl;\n    return 0;\n}\n"
+  },
+  {
+    "topic": "algorithms",
+    "difficulty": "INTERMEDIATE",
+    "content": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    vector<int> nums{5, 1, 4, 2, 3};\n    sort(nums.begin(), nums.end());\n    for (int n : nums) cout << n << \" \";\n    cout << endl;\n    return 0;\n}\n"
+  },
+  {
+    "topic": "algorithms",
+    "difficulty": "INTERMEDIATE",
+    "content": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    vector<int> v{1, 2, 3, 4, 5};\n    auto it = find(v.begin(), v.end(), 3);\n    if (it != v.end()) cout << \"Found at index: \" << distance(v.begin(), it) << endl;\n    return 0;\n}\n"
+  },
+  {
+    "topic": "sets",
+    "difficulty": "INTERMEDIATE",
+    "content": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    set<int> s{3, 1, 4, 1, 5};\n    for (int x : s) cout << x << \" \";\n    cout << endl;\n    return 0;\n}\n"
+  },
+  {
+    "topic": "classes",
+    "difficulty": "INTERMEDIATE",
+    "content": "#include <iostream>\nusing namespace std;\n\nclass Rectangle {\n    int width, height;\npublic:\n    Rectangle(int w, int h) : width(w), height(h) {}\n    int area() { return width * height; }\n};\n\nint main() {\n    Rectangle r(5, 3);\n    cout << \"Area: \" << r.area() << endl;\n    return 0;\n}\n"
+  },
+  {
+    "topic": "templates",
+    "difficulty": "ADVANCED",
+    "content": "#include <iostream>\nusing namespace std;\n\ntemplate<typename T>\nT maximum(T a, T b) {\n    return (a > b) ? a : b;\n}\n\nint main() {\n    cout << maximum(10, 20) << endl;\n    cout << maximum(3.14, 2.71) << endl;\n    return 0;\n}\n"
+  },
+  {
+    "topic": "smart-pointers",
+    "difficulty": "ADVANCED",
+    "content": "#include <memory>\n#include <iostream>\nusing namespace std;\n\nint main() {\n    unique_ptr<int> ptr = make_unique<int>(42);\n    cout << *ptr << endl;\n    return 0;\n}\n"
+  },
+  {
+    "topic": "lambda",
+    "difficulty": "ADVANCED",
+    "content": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    vector<int> v{1, 2, 3, 4, 5};\n    for_each(v.begin(), v.end(), [](int x) {\n        cout << x * x << \" \";\n    });\n    return 0;\n}\n"
+  },
+  {
+    "topic": "iterators",
+    "difficulty": "INTERMEDIATE",
+    "content": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    vector<int> v{10, 20, 30, 40};\n    for (auto it = v.begin(); it != v.end(); ++it) {\n        cout << *it << \" \";\n    }\n    return 0;\n}\n"
+  }
+]
+
