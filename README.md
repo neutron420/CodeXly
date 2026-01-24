@@ -17,7 +17,7 @@
 
 <br/>
 
-**A modern, full-stack web application built with Next.js 15, featuring a robust backend with Prisma ORM, comprehensive testing suite, and a beautiful UI powered by shadcn/ui and Tailwind CSS.**
+**A coding-focused typing practice application inspired by Monkeytype, built with Next.js 15. Practice your typing speed and accuracy with real code snippets, featuring a robust backend with Prisma ORM, comprehensive testing suite, and a beautiful UI powered by shadcn/ui and Tailwind CSS.**
 
 <p>
   <a href="#about-the-project">About</a> •
@@ -33,7 +33,7 @@
 
 ## About The Project
 
-CodeXly is a production-ready web application showcasing modern development practices and cutting-edge technologies. Built with Next.js 15 and the App Router, it features a type-safe backend with Prisma ORM, comprehensive API testing with Jest, and a polished user interface designed with shadcn/ui components. The project demonstrates best practices in full-stack development, from database design to deployment automation.
+CodeXly is a specialized typing practice platform designed for developers who want to improve their coding speed and accuracy. Inspired by Monkeytype, CodeXly focuses on real programming syntax and code snippets from various languages. Built with Next.js 15 and the App Router, it features a type-safe backend with Prisma ORM for tracking user progress, comprehensive API testing with Jest, and a polished, distraction-free interface designed with shadcn/ui components. Perfect for developers looking to enhance their muscle memory with actual code rather than plain text.
 
 ### Built With
 
@@ -52,16 +52,18 @@ This project leverages the latest web technologies for optimal performance and d
 
 ## Key Features
 
-* **Next.js App Router:** Latest routing architecture with server components and streaming
-* **Type-Safe Backend:** Full TypeScript integration with Prisma for database operations
-* **Modern UI/UX:** Beautiful, accessible components built with shadcn/ui and Tailwind CSS
-* **Comprehensive Testing:** Jest-based test suite for API endpoints and components
-* **Database Management:** Prisma ORM with migrations and schema management
-* **API Routes:** RESTful API endpoints with proper error handling
-* **Font Optimization:** Automatic font optimization with next/font
-* **Responsive Design:** Mobile-first approach with Tailwind CSS
-* **CI/CD Pipeline:** Automated testing and deployment with GitHub Actions
-* **Developer Experience:** Hot reload, TypeScript intellisense, and ESLint integration
+* **Typing Practice with Code:** Practice typing with real code snippets from popular programming languages
+* **Multiple Languages:** Support for JavaScript, TypeScript, Python, Rust, Go, and more
+* **Performance Metrics:** Track WPM (Words Per Minute), accuracy, and consistency
+* **Progress Tracking:** Save and analyze your typing performance over time with Prisma database
+* **Code Themes:** Multiple syntax highlighting themes for comfortable practice
+* **Customizable Tests:** Choose code difficulty, duration, and programming language
+* **Leaderboards:** Compete with other developers and track rankings
+* **User Profiles:** Personal dashboard with statistics and improvement graphs
+* **Modern UI/UX:** Clean, distraction-free interface built with shadcn/ui and Tailwind CSS
+* **Responsive Design:** Practice on desktop, tablet, or mobile devices
+* **Comprehensive Testing:** Jest-based test suite for reliability
+* **Real-Time Feedback:** Instant visual feedback on typing accuracy
 
 ## Getting Started
 
@@ -130,18 +132,27 @@ You will need Node.js (version 18 or higher) and a package manager (npm, yarn, p
 codexly/
 ├── app/                    # Next.js App Router pages and layouts
 │   ├── api/               # API route handlers
-│   ├── (routes)/          # Application routes
+│   │   ├── tests/         # Typing test endpoints
+│   │   ├── results/       # Score and results API
+│   │   └── leaderboard/   # Leaderboard endpoints
+│   ├── practice/          # Typing practice pages
+│   ├── profile/           # User profile and stats
 │   └── layout.tsx         # Root layout
 ├── components/            # React components
 │   ├── ui/               # shadcn/ui components
+│   ├── typing/           # Typing test components
+│   ├── stats/            # Statistics and charts
 │   └── ...               # Custom components
 ├── lib/                   # Utility libraries
 │   ├── prisma.ts         # Prisma client instance
+│   ├── code-snippets.ts  # Code snippet generation
 │   └── utils.ts          # Helper functions
 ├── prisma/                # Prisma schema and migrations
-│   ├── schema.prisma     # Database schema
+│   ├── schema.prisma     # Database schema (users, results, etc.)
 │   └── migrations/       # Database migrations
 ├── hooks/                 # Custom React hooks
+│   ├── useTypingTest.ts  # Typing test logic
+│   └── useStats.ts       # Statistics hooks
 ├── public/               # Static assets
 ├── __tests__/            # Test files
 │   └── api/             # API endpoint tests
@@ -234,12 +245,18 @@ API endpoints are located in the `app/api` directory. Each route handler follows
 
 ```
 app/api/
-├── users/
-│   ├── route.ts          # GET, POST /api/users
+├── tests/
+│   ├── route.ts          # GET /api/tests - Get random code snippets
 │   └── [id]/
-│       └── route.ts      # GET, PUT, DELETE /api/users/:id
-└── posts/
-    └── route.ts          # GET, POST /api/posts
+│       └── route.ts      # GET /api/tests/:id - Get specific test
+├── results/
+│   └── route.ts          # POST /api/results - Submit typing test results
+├── leaderboard/
+│   └── route.ts          # GET /api/leaderboard - Get top scores
+└── users/
+    └── [id]/
+        └── stats/
+            └── route.ts  # GET /api/users/:id/stats - User statistics
 ```
 
 ## Testing
